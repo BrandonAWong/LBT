@@ -1,60 +1,44 @@
-import { useState } from 'react';
-import { Table, Card, Input, Space, Button } from 'antd'
-const { Search } = Input;
+import SearchTable from './SearchTable.jsx';
+import { Button } from 'antd';
 
-const JobTitleTable = () => {
-  const [loading, setLoading] = useState(false);
-
-
+const JobTitleTable = ({ setSelectedTitle }) => {
   const columns = [
       {
           title: 'Job Title',
           dataIndex: 'jobTitle',
           key: 'jobTitle',
-          render: text => <a>{text}</a>
+          render: text => <Button color='primary' variant='filled' onClick={() => setSelectedTitle(text)}>{text}</Button>,
+          sorter: (a, b) => a.jobTitle.toLowerCase().localeCompare(b.jobTitle.toLowerCase()),
+          ellipsis: true
       },
       {
         title: 'User Count',
         dataIndex: 'userCount',
-        key: 'userCount'
-      },
-      {
-        title: 'Action',
-        key: 'action',
-        width: 120,
-        render: (_, record) => (
-          <Space size="middle">
-            <Button>View {record.jobTitle}s</Button>
-          </Space>
-        )
+        key: 'userCount',
+        sorter: (a, b) => a.userCount - b.userCount,
+        ellipsis: true,
+        width: 105
       }
   ];
 
-  const data = [{key: 1, jobTitle: 'Manager', userCount: 15}, 
+  const _data = [{key: 1, jobTitle: 'Manager', userCount: 15}, 
     {key: 2, jobTitle: 'Intern', userCount: 4},
-    {key: 3, jobTitle: 'brandon', userCount: 1}];
-
-  const onSearch = (value, setLoading) => {
-    if (!value) {
-      return;
-    }
-
-    // perform AD Search
-    setLoading(true);
-    console.log(value);
-    // turn loading off
-  }
+    {key: 3, jobTitle: 'brandon', userCount: 1},
+  {key: 4, jobTitle: 'Intern', userCount: 4},
+{key: 5, jobTitle: 'Intern', userCount: 4},
+{key: 6, jobTitle: 'Intern', userCount: 4},
+{key: 7, jobTitle: 'Intern', userCount: 4},
+{key: 8, jobTitle: 'Intern', userCount: 4},
+{key: 9, jobTitle: 'Intern', userCount: 4},
+{key: 10, jobTitle: 'Intern', userCount: 4},
+{key: 11, jobTitle: 'Intern', userCount: 4},];
 
   return (
-    <Card size="default"
-          title={<Search placeholder="Search for a job title" 
-                         enterButton
-                         loading={loading}
-                         size="large" 
-                         onSearch={(val) => onSearch(val, setLoading)} />}>
-      
-      <Table columns={columns} dataSource={data} pagination={{ position: ['bottomCenter'] }}></Table>
-    </Card>
+    <SearchTable columns={columns} 
+                 data={_data} 
+                 searchField="jobTitle"
+                 title="Job Titles" 
+                 placeholder="Search By Job Title" />
   )
 }
 

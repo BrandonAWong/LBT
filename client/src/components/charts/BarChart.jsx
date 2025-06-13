@@ -1,4 +1,5 @@
-import { Card } from 'antd';
+import { Card, Skeleton } from 'antd';
+import { DotChartOutlined } from '@ant-design/icons';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
@@ -26,7 +27,15 @@ const BarChart = ({ labels, data, title }) => {
 
     return (
         <Card title={title}>
-            <Bar data={chartConfig} />
+            {data == null || data.length <= 0 &&
+              <Skeleton.Node style={{ width: 1300, height: 450 }}>
+                  <DotChartOutlined style={{ fontSize: 40, color: '#bfbfbf' }} />
+              </Skeleton.Node>
+            }
+
+            {data != null && data.length > 0 &&
+                <Bar data={chartConfig} />
+            }
         </Card>
     );
 };

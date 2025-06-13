@@ -4,6 +4,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import JobTitleTable from '../components/JobTitleTable.jsx';
 import GroupsTable from '../components/GroupsTable.jsx';
 import BarChart from '../components/charts/BarChart.jsx';
+import API_BASE_URL from '../config/api.js';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -41,7 +42,7 @@ const Dashboard = () => {
   useEffect(() => {
     async function getTitles() {
       try {
-        const response = await fetch("http://localhost:5041/api/active-directory/titles")
+        const response = await fetch(`${API_BASE_URL}/active-directory/titles`)
         
         if (response.ok) {
           const data = await response.json()
@@ -73,8 +74,7 @@ const Dashboard = () => {
       if (selectedTitle) {
         setLoading(true);
         try {
-          // fill with good link
-          const response = await fetch(`http://localhost:5041/api/active-directory/titles/${encodeURIComponent(selectedTitle)}/groups`);
+          const response = await fetch(`${API_BASE_URL}/active-directory/titles/${encodeURIComponent(selectedTitle)}/groups`);
 
           if (response.ok) {
             const data = await response.json();

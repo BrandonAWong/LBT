@@ -1,13 +1,14 @@
 import { Button } from 'antd';
 import * as Excel from 'exceljs';
 import saveAs from 'file-saver';
+import API_BASE_URL from '../config/api.js';
 
 const ExcelJobGroupButton = ({ setLoading }) => {
   const generateExcel = async () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5041/api/active-directory/titles/groups/common-per-title");
+      const response = await fetch(`${API_BASE_URL}/active-directory/titles/groups/common-per-title`);
 
       if (response.ok) {
         const data = await response.json();

@@ -1,12 +1,12 @@
 import SearchTable from './SearchTable.jsx';
 
-const SecurityGroupTable = ({ data }) => {
+const GroupsTable = ({ data }) => {
   const columns = [
       {
           title: 'Group',
-          dataIndex: 'securityGroup',
-          key: 'securityGroup',
-          sorter: (a, b) => a.securityGroup.toLowerCase().localeCompare(b.securityGroup.toLowerCase()),
+          dataIndex: 'group',
+          key: 'group',
+          sorter: (a, b) => a.group.toLowerCase().localeCompare(b.group.toLowerCase()),
           ellipsis: true,
       },
       {
@@ -22,10 +22,10 @@ const SecurityGroupTable = ({ data }) => {
   return (
     <SearchTable columns={columns} 
                  data={data}
-                 searchField="securityGroup"
-                 title="Security Groups"
+                 searchField="group"
+                 title="Groups"
                  placeholder="Seach By Group" />
   )
 };
 
-export default SecurityGroupTable;
+export default GroupsTable;

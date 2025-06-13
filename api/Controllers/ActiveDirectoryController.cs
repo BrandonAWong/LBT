@@ -8,11 +8,11 @@ namespace RoleDashboard.Controllers
     [Produces("application/json")]
     public class ActiveDirectoryController : Controller
     {
-        private readonly ActiveDirectoryManager _activeirectoryManager;
+        private readonly ActiveDirectoryManager _activeDirectoryManager;
 
         public ActiveDirectoryController(ActiveDirectoryManager manager)
         {
-            _activeirectoryManager = manager;
+            _activeDirectoryManager = manager;
         }
 
         [HttpGet, Route("titles")]
@@ -20,7 +20,7 @@ namespace RoleDashboard.Controllers
         {
             try
             {
-                return Ok(_activeirectoryManager.GetTitles());
+                return Ok(_activeDirectoryManager.GetTitles());
             }
             catch (Exception e)
             {
@@ -32,13 +32,30 @@ namespace RoleDashboard.Controllers
                 });
             }
         }
-        
+
         [HttpGet, Route("titles/{title}/groups")]
         public ActionResult<Dictionary<string, int>> GetGroupsByTitle([FromRoute] string title)
         {
             try
             {
-                return Ok(_activeirectoryManager.GetGroupsByTitle(title));
+                return Ok(_activeDirectoryManager.GetGroupsByTitle(title));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new
+                {
+                    error = e.Message,
+                    message = "An unexpected error occured"
+                });
+            }
+        }
+        
+        [HttpGet, Route("titles/groups/common-per-title")]
+        public ActionResult<Dictionary<string, List<string>>> GetCommonGroupsForAllTitles()
+        {
+            try
+            {
+                return Ok(_activeDirectoryManager.GetCommonGroupsForAllTitles());
             }
             catch (Exception e)
             {

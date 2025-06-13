@@ -66,7 +66,7 @@ namespace RoleDashboard.Managers
                 {
                     continue;
                 }
-                
+
                 var userGroupList = memberOf.Cast<object>()
                     .Select(g => g?.ToString()?.Split(',').FirstOrDefault()?.Replace("CN=", string.Empty))
                     .Where(g => !string.IsNullOrWhiteSpace(g))
@@ -85,6 +85,28 @@ namespace RoleDashboard.Managers
 
             entry.Close();
             return groups;
+        }
+
+        internal Dictionary<string, List<string>> GetCommonGroupsForAllTitles()
+        {
+            IEnumerable<string> titles = GetTitles().Select(t => t.Key);
+            Dictionary<string, List<string>> commonGroups = new();
+
+            foreach (string title in titles)
+            {
+                Dictionary<string, int> groupCounts = GetGroupsByTitle(title);
+
+                if (groupCounts.Count > 0)
+                {
+                    int maxNumUsers = groupCounts.Select(gc => gc.Value).Max();
+                    commonGroups[title] = groupCounts
+                        .Where(gc => gc.Value == maxNumUsers)
+                        .Select(gc => gc.Key)
+                        .ToList();
+                }
+            }
+
+            return commonGroups.OrderBy(g => g.Key).ToDictionary();
         }
     }
 }

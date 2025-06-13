@@ -2,11 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Spin, message, FloatButton, Tour, List, Card } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import JobTitleTable from '../components/JobTitleTable.jsx';
-import SecurityGroupsTable from '../components/SecurityGroupTable.jsx';
+import GroupsTable from '../components/GroupsTable.jsx';
 import BarChart from '../components/charts/BarChart.jsx';
-import DoughnutChart from '../components/charts/DoughnutChart.jsx';
-import PolarChart from '../components/charts/PolarChart.jsx';
-import RadarChart from '../components/charts/RadarChart.jsx';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -29,6 +26,12 @@ const Dashboard = () => {
     {
       title: 'Select',
       description: 'Pick a job title and watch as the data populates',
+      placement: 'right',
+      target: () => jobTitleTable.current,
+    },
+    {
+      title: 'Matrix',
+      description: 'Click "Generate Matrix" to generate an Excel job matrix of jobs and AD groups',
       placement: 'right',
       target: () => jobTitleTable.current,
     }
@@ -77,7 +80,7 @@ const Dashboard = () => {
             const data = await response.json();
               
             const transformed = Object.entries(data).map(([key, value]) => ({
-              securityGroup: key,
+              group: key,
               count: value
             }));
 
@@ -116,9 +119,10 @@ const Dashboard = () => {
             className="flex-col">
             <div ref={jobTitleTable}>
               <JobTitleTable data={titles} 
-                             setSelectedTitle={setSelectedTitle} />
+                             setSelectedTitle={setSelectedTitle}
+                             setLoading={setLoading} />
             </div>
-            <SecurityGroupsTable data={groups} />
+            <GroupsTable data={groups} />
         </div>
   
         <div style={{
@@ -129,10 +133,10 @@ const Dashboard = () => {
                   title="Shared Groups">
               <List dataSource={commonGroups}
                     bordered
-                    renderItem={(item) => <List.Item>{item.securityGroup}</List.Item>} />
+                    renderItem={(item) => <List.Item>{item.group}</List.Item>} />
             </Card>
             <BarChart data={groups.map((v, _) => v.count)}
-                      labels={groups.map((v, _) => v.securityGroup)}
+                      labels={groups.map((v, _) => v.group)}
                       title="Group Distribution" />
         </div>
       </div>

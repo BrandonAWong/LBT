@@ -18,6 +18,8 @@ function App() {
           height: `${headerVh}vh`
         }}
       >
+        <img src="./logo.png"
+             style={{ height: '80%', borderRadius: '5px' }} />
       </Header>
 
       <Content>

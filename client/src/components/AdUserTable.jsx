@@ -1,7 +1,7 @@
 import SearchTable from './SearchTable.jsx';
 import { Button } from 'antd';
 
-const JobTitleTable = ({ setSelectedTitle }) => {
+const AdUserTable = ({ setSelectedTitle }) => {
   const columns = [
       {
           title: 'User ID',
@@ -52,4 +52,4 @@ const JobTitleTable = ({ setSelectedTitle }) => {
   )
 }
 
-export default JobTitleTable;
+export default AdUserTable;

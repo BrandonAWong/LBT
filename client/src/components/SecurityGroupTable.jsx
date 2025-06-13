@@ -1,6 +1,6 @@
 import SearchTable from './SearchTable.jsx';
 
-const SecurityGroupTable = () => {
+const SecurityGroupTable = ({ data }) => {
   const columns = [
       {
           title: 'Group',
@@ -11,9 +11,9 @@ const SecurityGroupTable = () => {
       },
       {
         title: 'User Count',
-        dataIndex: 'userCount',
-        key: 'userCount',
-        sorter: (a, b) => a.userCount - b.userCount,
+        dataIndex: 'count',
+        key: 'count',
+        sorter: (a, b) => a.count - b.count,
         ellipsis: true,
         width: 105
       },
@@ -21,7 +21,7 @@ const SecurityGroupTable = () => {
 
   return (
     <SearchTable columns={columns} 
-                 data={[{key: 1, securityGroup: 'OKTA - Verification', userCount: 5}]}
+                 data={data}
                  searchField="securityGroup"
                  title="Security Groups"
                  placeholder="Seach By Group" />

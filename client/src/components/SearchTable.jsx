@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Table, Card, Input } from 'antd'
 const { Search } = Input;
 
@@ -14,6 +14,10 @@ const SearchTable = ({columns, data, searchField, pageSize=5, title="Search", pl
         setDisplayData(data.filter(d => d[searchField].toLowerCase().includes(value.toLowerCase())));
     }
   }
+
+  useEffect(() => {
+    setDisplayData(data);
+  }, [data]);
 
   return (
     <Card size="default"
@@ -31,7 +35,7 @@ const SearchTable = ({columns, data, searchField, pageSize=5, title="Search", pl
 
       <Table columns={columns} 
              dataSource={displayData} 
-             pagination={{ position: ['bottomCenter'], pageSize: pageSize }}
+             pagination={{ position: ['bottomCenter'], pageSize: pageSize, showSizeChanger: false }}
              size="small" />
     </Card>
   )

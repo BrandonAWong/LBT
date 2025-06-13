@@ -1,24 +1,31 @@
+#pragma warning disable CA1416
+
 using System.DirectoryServices;
-using System.DirectoryServices.ActiveDirectory;
 
 namespace RoleDashboard.Managers
 {
     public class ActiveDirectoryManager
     {
-        public Dictionary<string, int> GetTitles()
+        internal Dictionary<string, int> GetTitles()
         {
-            DirectoryEntry entry = new() { Username = "!ActiveDirectory", Password = "wth12345" };
-            DirectorySearcher searcher = new(entry);
-            searcher.Filter = "(&(objectCategory=person)(objectClass=user)(title=*))";
+            DirectoryEntry entry = new($"LDAP://DC=corp,DC=lbtransit,DC=com");
+
+            DirectorySearcher searcher = new(entry)
+            {
+                ReferralChasing = ReferralChasingOption.All,
+                Filter = "(objectClass=user)",
+                SearchScope = SearchScope.Subtree,
+                PageSize = 100_000
+            };
+
             searcher.PropertiesToLoad.Add("title");
-            SearchResultCollection results = searcher.FindAll();
             Dictionary<string, int> titles = new(StringComparer.OrdinalIgnoreCase);
 
-            foreach (SearchResult result in results)
+            foreach (SearchResult result in searcher.FindAll())
             {
                 if (result.Properties.Contains("title"))
                 {
-                    string title = result.Properties["title"][0].ToString();
+                    string? title = result.Properties["title"][0]?.ToString();
 
                     if (!string.IsNullOrWhiteSpace(title))
                     {
@@ -32,7 +39,52 @@ namespace RoleDashboard.Managers
                 }
             }
 
+            entry.Close();
             return titles;
+        }
+
+        internal Dictionary<string, int> GetGroupsByTitle(string title)
+        {
+            DirectoryEntry entry = new($"LDAP://DC=corp,DC=lbtransit,DC=com");
+
+            DirectorySearcher searcher = new(entry)
+            {
+                ReferralChasing = ReferralChasingOption.All,
+                Filter = $"(&(objectClass=user)(title={title}))",
+                SearchScope = SearchScope.Subtree,
+            };
+
+            searcher.PropertiesToLoad.Add("memberOf");
+            Dictionary<string, int> groups = new(StringComparer.OrdinalIgnoreCase);
+
+            foreach (SearchResult result in searcher.FindAll())
+            {
+                DirectoryEntry curEntry = result.GetDirectoryEntry();
+                var memberOf = curEntry.Properties["memberOf"];
+
+                if (memberOf == null || memberOf.Count <= 0)
+                {
+                    continue;
+                }
+                
+                var userGroupList = memberOf.Cast<object>()
+                    .Select(g => g?.ToString()?.Split(',').FirstOrDefault()?.Replace("CN=", string.Empty))
+                    .Where(g => !string.IsNullOrWhiteSpace(g))
+                    .Distinct();
+
+                foreach (string group in userGroupList!)
+                {
+                    if (!groups.ContainsKey(group!))
+                    {
+                        groups[group!] = 0;
+                    }
+
+                    ++groups[group!];
+                }
+            }
+
+            entry.Close();
+            return groups;
         }
     }
 }

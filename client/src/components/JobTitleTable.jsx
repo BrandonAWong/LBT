@@ -1,7 +1,7 @@
 import SearchTable from './SearchTable.jsx';
 import { Button } from 'antd';
 
-const JobTitleTable = ({ setSelectedTitle }) => {
+const JobTitleTable = ({ data, setSelectedTitle }) => {
   const columns = [
       {
           title: 'Job Title',
@@ -13,29 +13,17 @@ const JobTitleTable = ({ setSelectedTitle }) => {
       },
       {
         title: 'User Count',
-        dataIndex: 'userCount',
-        key: 'userCount',
-        sorter: (a, b) => a.userCount - b.userCount,
+        dataIndex: 'count',
+        key: 'count',
+        sorter: (a, b) => a.count - b.count,
         ellipsis: true,
         width: 105
       }
   ];
 
-  const _data = [{key: 1, jobTitle: 'Manager', userCount: 15}, 
-    {key: 2, jobTitle: 'Intern', userCount: 4},
-    {key: 3, jobTitle: 'brandon', userCount: 1},
-  {key: 4, jobTitle: 'Intern', userCount: 4},
-{key: 5, jobTitle: 'Intern', userCount: 4},
-{key: 6, jobTitle: 'Intern', userCount: 4},
-{key: 7, jobTitle: 'Intern', userCount: 4},
-{key: 8, jobTitle: 'Intern', userCount: 4},
-{key: 9, jobTitle: 'Intern', userCount: 4},
-{key: 10, jobTitle: 'Intern', userCount: 4},
-{key: 11, jobTitle: 'Intern', userCount: 4},];
-
   return (
     <SearchTable columns={columns} 
-                 data={_data} 
+                 data={data} 
                  searchField="jobTitle"
                  title="Job Titles" 
                  placeholder="Search By Job Title" />

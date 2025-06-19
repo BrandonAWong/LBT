@@ -24,7 +24,6 @@ namespace RoleDashboard.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 return StatusCode(500, new
                 {
                     error = e.Message,

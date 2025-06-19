@@ -1,3 +1,4 @@
+using EFCore.NamingConventions;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -8,7 +9,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<Bus.Contexts.MsetContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("mset")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("mset"))
+    .UseSnakeCaseNamingConvention());
 
 var app = builder.Build();
 

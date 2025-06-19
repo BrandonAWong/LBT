@@ -7,16 +7,9 @@ namespace Bus.Models
     public class RemoteSite
     {
         [Key]
-        [Column("site_id")]
         public int SiteId { get; set; }
-
-        [Column("site_name")]
         public string? SiteName { get; set; }
-
-        [Column("ip_address")]
         public string? IpAddress { get; set; }
-
-        [Column("alternate_ip_address")]
         public string? AlternateIpAddress { get; set; }
 
         [Column("last_event_collect_time")]

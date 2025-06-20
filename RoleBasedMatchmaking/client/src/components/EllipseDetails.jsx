@@ -4,7 +4,7 @@ const EllipseDetails = ({ items }) => {
   return (
     <Card size="default"
           title="Ellipse Details">
-      {items == null || items.length <= 0 &&
+      {items === null || items.length <= 0 &&
         <Skeleton active />
       }
 

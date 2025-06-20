@@ -101,7 +101,7 @@ const Dashboard = () => {
           // ellipse data
           const response2 = await fetch(`${API_BASE_URL}/role-pipeline/ellipse/${encodeURIComponent(selectedTitle)}/details`);
 
-          if (response2.status == 200) {
+          if (response2.status === 200) {
             const data = await response2.json();
 
             const transformed = Object.entries(data).map(([key, value], index) => ({
@@ -113,11 +113,15 @@ const Dashboard = () => {
                 ? 'N/A'
                 : value
             }));
-            console.log(transformed);
+
             setEllipseItems(transformed);
           }
-          else if (response2.status != 204) {
-            throw new Error(`Response status: ${response2.status}`);
+          else {
+            if (response2.status != 204) {
+              throw new Error(`Response status: ${response2.status}`);
+            }
+            
+            setEllipseItems([]);
           }
         } catch (error) { 
           messageApi.open({ type: 'error', content: error.message });

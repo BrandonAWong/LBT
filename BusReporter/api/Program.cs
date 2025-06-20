@@ -1,4 +1,3 @@
-using EFCore.NamingConventions;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 

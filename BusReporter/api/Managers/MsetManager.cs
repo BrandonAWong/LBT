@@ -1,5 +1,6 @@
 using Bus.Contexts;
 using Bus.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bus.Managers
 {
@@ -12,9 +13,18 @@ namespace Bus.Managers
             _context = context;
         }
 
-        internal List<RemoteSite> GetRemoteSites()
+        internal async Task<List<RemoteSite>> GetRemoteSites()
         {
-            return _context.RemoteSites.ToList();
+            return await _context.RemoteSites.ToListAsync();
+        }
+
+        internal async Task<List<EventLog>> GetRemoteSiteLog(int siteId)
+        {
+            return await _context.EventLogs
+                .Include(e => e.EventDescription)
+                .Where(e => e.SiteId == siteId)
+                .OrderByDescending(e => e.EventStart)
+                .ToListAsync();
         }
     }
 }

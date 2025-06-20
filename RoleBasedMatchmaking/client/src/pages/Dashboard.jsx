@@ -12,7 +12,8 @@ const Dashboard = () => {
   const [selectedTitle, setSelectedTitle] = useState('');
 
   const [groups, setGroups] = useState([]);
-  const [commonGroups, setCommonGroups] = useState([]);
+  const [commonSecGroups, setCommonSecGroups] = useState([]);
+  const [commonDistGroups, setCommonDistGroups] = useState([]);
 
   const [ellipseItems, setEllipseItems] = useState([]);
 
@@ -79,30 +80,46 @@ const Dashboard = () => {
         setLoading(true);
         try {
           // AD Groups call
-          const response = await fetch(`${API_BASE_URL}/active-directory/titles/${encodeURIComponent(selectedTitle)}/groups`);
+          const response = await fetch(`${API_BASE_URL}/active-directory/titles/${encodeURIComponent(selectedTitle)}/groups?raw=true`);
 
           if (response.ok) {
             const data = await response.json();
-              
+
+            // prob ebtter way of doing this stupid thing BUT IGTG
+            const secGroups = Object.entries(data)
+              .filter(([key, value]) => key.includes("OU=Domain - Security Groups"))
+              .map(([key, value]) => ({
+                group: key.split(',')[0].replace('CN=', ''),
+                count: value
+              }));
+
+            const distGroups = Object.entries(data)
+              .filter(([key, value]) => key.includes("OU=Domain - Distribution Groups"))
+              .map(([key, value]) => ({
+                group: key.split(',')[0].replace('CN=', ''),
+                count: value
+              }));
+
             const transformed = Object.entries(data).map(([key, value]) => ({
-              group: key,
+              group: key.split(',')[0].replace('CN=', ''),
               count: value
             }));
 
             setGroups(transformed);
-            
+
             const maxGroupMembers = Math.max(...transformed.map((v, _) => v.count));
-            setCommonGroups(transformed.filter(t => t.count == maxGroupMembers));
+            setCommonSecGroups(secGroups.filter(t => t.count == maxGroupMembers));
+            setCommonDistGroups(distGroups.filter(t => t.count == maxGroupMembers));
           }
           else {
             throw new Error(`Response status: ${response.status}`);
           }
 
-          // ellipse data
-          const response2 = await fetch(`${API_BASE_URL}/role-pipeline/${encodeURIComponent(selectedTitle)}/details`);
+          // details data
+          const detailsResponse = await fetch(`${API_BASE_URL}/role-pipeline/${encodeURIComponent(selectedTitle)}/details`);
 
-          if (response2.status === 200) {
-            const data = await response2.json();
+          if (detailsResponse.status === 200) {
+            const data = await detailsResponse.json();
 
             const transformed = Object.entries(data).map(([key, value], index) => ({
               key: index,
@@ -117,8 +134,8 @@ const Dashboard = () => {
             setEllipseItems(transformed);
           }
           else {
-            if (response2.status != 204) {
-              throw new Error(`Response status: ${response2.status}`);
+            if (detailsResponse.status != 204) {
+              throw new Error(`Response status: ${detailsResponse.status}`);
             }
             
             setEllipseItems([]);
@@ -166,12 +183,18 @@ const Dashboard = () => {
             <div className="flex-row">
               <Card size="default"
                     title="Common Security Groups"
-                    style={{width: '100%'}}>
-                <List dataSource={commonGroups}
+                    style={{width: '50%'}}>
+                <List dataSource={commonSecGroups}
                       bordered
                       renderItem={(item) => <List.Item>{item.group}</List.Item>}/>
               </Card>
-
+                <Card size="default"
+                    title="Common Distribution Groups"
+                    style={{width: '50%'}}>
+                <List dataSource={commonDistGroups}
+                      bordered
+                      renderItem={(item) => <List.Item>{item.group}</List.Item>}/>
+              </Card>
             </div>
 
         </div>

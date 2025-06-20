@@ -33,11 +33,11 @@ namespace RoleDashboard.Controllers
         }
 
         [HttpGet, Route("titles/{title}/groups")]
-        public ActionResult<Dictionary<string, int>> GetGroupsByTitle([FromRoute] string title)
+        public ActionResult<Dictionary<string, int>> GetGroupsByTitle([FromRoute] string title, [FromQuery] bool raw = false)
         {
             try
             {
-                return Ok(_activeDirectoryManager.GetGroupsByTitle(title));
+                return Ok(_activeDirectoryManager.GetGroupsByTitle(title, raw));
             }
             catch (Exception e)
             {

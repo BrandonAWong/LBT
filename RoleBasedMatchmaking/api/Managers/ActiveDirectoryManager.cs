@@ -44,7 +44,7 @@ namespace RoleDashboard.Managers
             return titles;
         }
 
-        internal Dictionary<string, int> GetGroupsByTitle(string title)
+        internal Dictionary<string, int> GetGroupsByTitle(string title, bool raw = false)
         {
             DirectoryEntry entry = new($"LDAP://DC=corp,DC=lbtransit,DC=com");
 
@@ -69,7 +69,9 @@ namespace RoleDashboard.Managers
                 }
 
                 var userGroupList = memberOf.Cast<object>()
-                    .Select(g => g?.ToString()?.Split(',').FirstOrDefault()?.Replace("CN=", string.Empty))
+                    .Select(g => raw
+                        ? g.ToString()
+                        : g?.ToString()?.Split(',').FirstOrDefault()?.Replace("CN=", string.Empty))
                     .Where(g => !string.IsNullOrWhiteSpace(g))
                     .Distinct();
 

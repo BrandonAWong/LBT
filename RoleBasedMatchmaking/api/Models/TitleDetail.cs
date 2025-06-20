@@ -3,15 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RoleDashboard.Models
 {
-    [Table("ellipse_title")]
-    public class EllipseTitle
+    [Table("title_detail")]
+    public class TitleDetail
     {
         [Key]
-        [Column("position_title")]
         public string Title { get; set; } = string.Empty;
 
         public string? Department { get; set; }
-        public bool? Ad { get; set; }
+        public bool? ActiveDirectory { get; set; }
         public bool? Email { get; set; }
         public bool? PhoneNumber { get; set; }
         public bool? EllipseAccess { get; set; }

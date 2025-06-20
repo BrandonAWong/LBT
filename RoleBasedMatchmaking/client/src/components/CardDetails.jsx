@@ -1,11 +1,11 @@
 import { Card, Descriptions, Skeleton } from "antd";
 
-const EllipseDetails = ({ items }) => {
+const CardDetails = ({ items, title="Details" }) => {
   return (
     <Card size="default"
-          title="Ellipse Details">
+          title={title}>
       {items === null || items.length <= 0 &&
-        <Skeleton active />
+        <Skeleton />
       }
 
       {items != null && items.length > 0 &&
@@ -15,4 +15,4 @@ const EllipseDetails = ({ items }) => {
   );
 };
 
-export default EllipseDetails;
+export default CardDetails;

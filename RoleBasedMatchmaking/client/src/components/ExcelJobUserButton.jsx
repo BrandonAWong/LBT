@@ -1,9 +1,11 @@
+// Generates an excel sheet of all users with their job title
+
 import { Button } from 'antd';
 import * as Excel from 'exceljs';
 import saveAs from 'file-saver';
 import API_BASE_URL from '../config/api.js';
 
-const ExcelJobGroupButton = ({ setLoading }) => {
+const ExcelJobUserButton = ({ setLoading }) => {
   const generateExcel = async () => {
     setLoading(true);
 
@@ -13,16 +15,11 @@ const ExcelJobGroupButton = ({ setLoading }) => {
       if (response.ok) {
         const data = await response.json();
 
-        const transformed = Object.entries(data).map(([key, value]) => ({
-          jobTitle: key,
-          groups: value
-        }));
-
         const workbook = new Excel.Workbook();
         const matrixSheet = workbook.addWorksheet('Matrix');
 
-        writeHeader(matrixSheet, ["Job Title", "Group"]);
-        writeData(matrixSheet, transformed);
+        writeHeader(matrixSheet, ["Name", "User ID", "Email", "Department", "Title"]);
+        writeData(matrixSheet, data);
 
         // adjust column widths
         matrixSheet.columns.forEach(col => {
@@ -34,11 +31,10 @@ const ExcelJobGroupButton = ({ setLoading }) => {
         const date = new Date();
         workbook.xlsx.writeBuffer().then(function(buffer) {
           let blob = new Blob([buffer], { type: "application/xlsx" });
-          saveAs(blob, `Report ${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}.xlsx`);
+          saveAs(blob, `AD User Report ${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}.xlsx`);
         });
       }
-    } catch (error) { } 
-    finally {
+    } catch (error) { } finally {
       setLoading(false);
     }
   };
@@ -56,26 +52,22 @@ const ExcelJobGroupButton = ({ setLoading }) => {
   };
 
   const writeData = (worksheet, data) => {
-    let i = 0;
-    data.forEach((titleGroup) => {
+    data.forEach((record, i) => {
       let row = worksheet.getRow(i + 2);
-      row.getCell(1).value = titleGroup.jobTitle;
-      
-      titleGroup.groups.forEach(group => {
-        row.getCell(2).value = group;
-        row = worksheet.getRow(++i + 2);
-      });
+      let j = 0;
 
-      ++i;
-      for (let j = 1; j < 50 ; ++j) {
-        row.getCell(j).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD7A68B' } };  
+      for (const key in record)
+      {
+        row.getCell(++j).value = record[key];
       }
     });
   };
 
   return <Button color="primary" 
                  variant="outlined"
-                 onClick={generateExcel}>Generate Matrix</Button>;
+                 onClick={generateExcel}>
+            Get Users
+          </Button>;
 };
 
-export default ExcelJobGroupButton;
+export default ExcelJobUserButton;

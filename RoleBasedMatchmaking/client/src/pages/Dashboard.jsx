@@ -3,7 +3,7 @@ import { Spin, message, FloatButton, Tour, List, Card } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import JobTitleTable from '../components/JobTitleTable.jsx';
 import GroupsTable from '../components/GroupsTable.jsx';
-import EllipseDetails from '../components/EllipseDetails.jsx';
+import CardDetails from '../components/CardDetails.jsx';
 import API_BASE_URL from '../config/api.js';
 import './Dashboard.css';
 
@@ -99,7 +99,7 @@ const Dashboard = () => {
           }
 
           // ellipse data
-          const response2 = await fetch(`${API_BASE_URL}/role-pipeline/ellipse/${encodeURIComponent(selectedTitle)}/details`);
+          const response2 = await fetch(`${API_BASE_URL}/role-pipeline/${encodeURIComponent(selectedTitle)}/details`);
 
           if (response2.status === 200) {
             const data = await response2.json();
@@ -145,7 +145,7 @@ const Dashboard = () => {
       {contextHolder}
       <div className="flex-row">
         <div style={{
-                flex: 0.7
+                flex: 0.8
             }}
             className="flex-col">
             <div ref={jobTitleTable}>
@@ -157,22 +157,23 @@ const Dashboard = () => {
         </div>
   
         <div style={{
-                flex: 0.8
+                flex: 2
             }}
             className="flex-col">
-            <Card size="default"
-                  title="Common Groups">
-              <List dataSource={commonGroups}
-                    bordered
-                    renderItem={(item) => <List.Item>{item.group}</List.Item>} />
-            </Card>
-        </div>
+            <CardDetails items={ellipseItems}
+                         title="Profile Details" />
 
-        <div style={{
-                flex: 1
-            }}
-            className="flex-col">
-            <EllipseDetails items={ellipseItems} />
+            <div className="flex-row">
+              <Card size="default"
+                    title="Common Security Groups"
+                    style={{width: '100%'}}>
+                <List dataSource={commonGroups}
+                      bordered
+                      renderItem={(item) => <List.Item>{item.group}</List.Item>}/>
+              </Card>
+
+            </div>
+
         </div>
       </div>
 

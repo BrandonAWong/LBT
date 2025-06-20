@@ -10,6 +10,6 @@ namespace RoleDashboard.Contexts
         {
         }
 
-        public DbSet<EllipseTitle> EllipseTitles { get; set; }
+        public DbSet<TitleDetail> TitleDetails { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 #pragma warning disable CA1416
 
 using System.DirectoryServices;
+using RoleDashboard.Models;
 
 namespace RoleDashboard.Managers
 {
@@ -15,7 +16,7 @@ namespace RoleDashboard.Managers
                 ReferralChasing = ReferralChasingOption.All,
                 Filter = "(objectClass=user)",
                 SearchScope = SearchScope.Subtree,
-                PageSize = 100_000
+                PageSize = 10_000
             };
 
             searcher.PropertiesToLoad.Add("title");
@@ -108,5 +109,51 @@ namespace RoleDashboard.Managers
 
             return commonGroups.OrderBy(g => g.Key).ToDictionary();
         }
+
+        internal List<AdUser> GetAllUsers()
+        {
+            DirectoryEntry entry = new($"LDAP://DC=corp,DC=lbtransit,DC=com");
+
+            DirectorySearcher searcher = new(entry)
+            {
+                ReferralChasing = ReferralChasingOption.All,
+                Filter = "(objectClass=user)",
+                SearchScope = SearchScope.Subtree,
+                PageSize = 10_000
+            };
+
+            searcher.PropertiesToLoad.AddRange(["displayName", "sAMAccountName",
+                "userPrincipalName", "department", "title"]);
+            List<AdUser> users = new();
+
+            foreach (SearchResult result in searcher.FindAll())
+            {
+                if (result.Properties.Contains("title"))
+                {
+                    users.Add(new AdUser
+                    {
+                        Name = GetAdProperty(result, "displayName"),
+                        UserId = GetAdProperty(result, "sAMAccountName"),
+                        Email = GetAdProperty(result, "userPrincipalName"),
+                        Department = GetAdProperty(result, "department"),
+                        Title = GetAdProperty(result, "title"),
+                    });   
+                }
+            }
+
+            return users.OrderBy(u => u.Title).ToList();
+        }
+
+        #region Helpers
+        private string GetAdProperty(SearchResult result, string property)
+        {
+            if (result.Properties.Contains(property) && result.Properties[property].Count > 0)
+            {
+                return result.Properties[property][0]?.ToString() ?? string.Empty;
+            }
+
+            return string.Empty;
+        }
+        #endregion
     }
 }

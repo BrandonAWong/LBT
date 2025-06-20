@@ -1,4 +1,5 @@
 import ExcelJobGroupButton from './ExcelJobGroupButton.jsx';
+import ExcelJobUserButton from './ExcelJobUserButton.jsx';
 import SearchTable from './SearchTable.jsx';
 import { Button } from 'antd';
 
@@ -29,7 +30,10 @@ const JobTitleTable = ({ data, setSelectedTitle, setLoading }) => {
                  title={
                   <div style={{display: 'flex', justifyContent: 'space-between'}}>
                     Job Titles 
-                    <ExcelJobGroupButton setLoading={setLoading} />
+                    <div style={{display: 'flex', gap: '10px'}}>
+                      <ExcelJobUserButton setLoading={setLoading} />
+                      <ExcelJobGroupButton setLoading={setLoading} />
+                    </div>
                   </div>
                  }
                  placeholder="Search By Job Title" />

@@ -18,12 +18,12 @@ namespace RoleDashboard.Controllers
             _manager = new(context);
         }
 
-        [HttpGet, Route("ellipse/{title}/details")]
-        public async Task<ActionResult<EllipseTitle>> GetEllipseDetailsByTitle([FromRoute] string title)
+        [HttpGet, Route("{title}/details")]
+        public async Task<ActionResult<TitleDetail>> GetTitleDetails([FromRoute] string title)
         {
             try
             {
-                EllipseTitle? details = await _manager.GetEllipseDetailsByTitle(title);
+                TitleDetail? details = await _manager.GetTitleDetails(title);
 
                 if (details != null)
                 {

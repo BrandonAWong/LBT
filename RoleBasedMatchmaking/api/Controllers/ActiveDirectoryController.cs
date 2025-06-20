@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using RoleDashboard.Contexts;
 using RoleDashboard.Managers;
+using RoleDashboard.Models;
 
 namespace RoleDashboard.Controllers
 {
@@ -48,13 +48,30 @@ namespace RoleDashboard.Controllers
                 });
             }
         }
-        
+
         [HttpGet, Route("titles/groups/common-per-title")]
         public ActionResult<Dictionary<string, List<string>>> GetCommonGroupsForAllTitles()
         {
             try
             {
                 return Ok(_activeDirectoryManager.GetCommonGroupsForAllTitles());
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new
+                {
+                    error = e.Message,
+                    message = "An unexpected error occured"
+                });
+            }
+        }
+        
+        [HttpGet, Route("titles/users")]
+        public ActionResult<List<AdUser>> GetUsersPerTitle()
+        {
+            try
+            {
+                return Ok(_activeDirectoryManager.GetAllUsers());
             }
             catch (Exception e)
             {

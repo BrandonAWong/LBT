@@ -14,9 +14,9 @@ namespace RoleDashboard.Managers
             _context = context;
         }
 
-        internal async Task<EllipseTitle?> GetEllipseDetailsByTitle(string title)
+        internal async Task<TitleDetail?> GetTitleDetails(string title)
         {
-            return await _context.EllipseTitles.FirstOrDefaultAsync(et => et.Title.ToLower() == title.ToLower());
+            return await _context.TitleDetails.FirstOrDefaultAsync(et => et.Title.ToLower() == title.ToLower());
         }
     }
 }

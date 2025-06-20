@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using RoleDashboard.Contexts;
 using RoleDashboard.Managers;
 
 namespace RoleDashboard.Controllers
@@ -9,7 +10,6 @@ namespace RoleDashboard.Controllers
     public class ActiveDirectoryController : Controller
     {
         private readonly ActiveDirectoryManager _activeDirectoryManager;
-
         public ActiveDirectoryController(ActiveDirectoryManager manager)
         {
             _activeDirectoryManager = manager;

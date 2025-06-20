@@ -1,0 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using RoleDashboard.Models;
+
+namespace RoleDashboard.Contexts
+{
+    public class RolePipelineContext : DbContext
+    {
+        public RolePipelineContext(DbContextOptions<RolePipelineContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<EllipseTitle> EllipseTitles { get; set; }
+    }
+}

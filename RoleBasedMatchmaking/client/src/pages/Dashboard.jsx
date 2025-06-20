@@ -3,15 +3,19 @@ import { Spin, message, FloatButton, Tour, List, Card } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import JobTitleTable from '../components/JobTitleTable.jsx';
 import GroupsTable from '../components/GroupsTable.jsx';
-import BarChart from '../components/charts/BarChart.jsx';
+import EllipseDetails from '../components/EllipseDetails.jsx';
 import API_BASE_URL from '../config/api.js';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const [titles, setTitles] = useState([]);
+  const [selectedTitle, setSelectedTitle] = useState('');
+
   const [groups, setGroups] = useState([]);
   const [commonGroups, setCommonGroups] = useState([]);
-  const [selectedTitle, setSelectedTitle] = useState('');
+
+  const [ellipseItems, setEllipseItems] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const [openTour, setOpenTour] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
@@ -74,6 +78,7 @@ const Dashboard = () => {
       if (selectedTitle) {
         setLoading(true);
         try {
+          // AD Groups call
           const response = await fetch(`${API_BASE_URL}/active-directory/titles/${encodeURIComponent(selectedTitle)}/groups`);
 
           if (response.ok) {
@@ -92,6 +97,28 @@ const Dashboard = () => {
           else {
             throw new Error(`Response status: ${response.status}`);
           }
+
+          // ellipse data
+          const response2 = await fetch(`${API_BASE_URL}/role-pipeline/ellipse/${encodeURIComponent(selectedTitle)}/details`);
+
+          if (response2.status == 200) {
+            const data = await response2.json();
+
+            const transformed = Object.entries(data).map(([key, value], index) => ({
+              key: index,
+              label: key,
+              children:   typeof value === 'boolean'
+                ? value ? 'Yes' : 'No'
+                : value === null
+                ? 'N/A'
+                : value
+            }));
+            console.log(transformed);
+            setEllipseItems(transformed);
+          }
+          else if (response2.status != 204) {
+            throw new Error(`Response status: ${response2.status}`);
+          }
         } catch (error) { 
           messageApi.open({ type: 'error', content: error.message });
         }
@@ -100,7 +127,7 @@ const Dashboard = () => {
         }
       }
     }
-
+    
     fetchData();
   }, [selectedTitle]);
 
@@ -126,18 +153,22 @@ const Dashboard = () => {
         </div>
   
         <div style={{
-                flex: 2
+                flex: 0.8
             }}
             className="flex-col">
             <Card size="default"
-                  title="Shared Groups">
+                  title="Common Groups">
               <List dataSource={commonGroups}
                     bordered
                     renderItem={(item) => <List.Item>{item.group}</List.Item>} />
             </Card>
-            <BarChart data={groups.map((v, _) => v.count)}
-                      labels={groups.map((v, _) => v.group)}
-                      title="Group Distribution" />
+        </div>
+
+        <div style={{
+                flex: 1
+            }}
+            className="flex-col">
+            <EllipseDetails items={ellipseItems} />
         </div>
       </div>
 

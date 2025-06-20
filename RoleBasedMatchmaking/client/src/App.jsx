@@ -18,7 +18,7 @@ function App() {
           height: `${headerVh}vh`
         }}
       >
-        <img src="./logo.png"
+        <img src={`${import.meta.env.BASE_URL}/logo.png`}
              style={{ height: '80%', borderRadius: '5px' }} />
       </Header>
 

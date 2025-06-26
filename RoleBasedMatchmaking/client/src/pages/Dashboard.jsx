@@ -124,10 +124,8 @@ const Dashboard = () => {
             const transformed = Object.entries(data).map(([key, value], index) => ({
               key: index,
               label: key,
-              children:   typeof value === 'boolean'
+              children: typeof value === 'boolean'
                 ? value ? 'Yes' : 'No'
-                : value === null
-                ? 'N/A'
                 : value
             }));
 

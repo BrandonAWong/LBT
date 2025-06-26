@@ -1,9 +1,18 @@
-import { Layout } from 'antd';
+import Admin from './pages/Admin';
 import Dashboard from './pages/Dashboard';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Layout, Menu } from 'antd';
+
 const { Header, Content } = Layout;
 
 function App() {
   const headerVh = 5
+  const navItems = ['Dashboard', 'Admin'].map(key => ({
+    key,
+    label: key
+  }));
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <Layout>
@@ -15,11 +24,21 @@ function App() {
           width: '100%',
           display: 'flex',
           alignItems: 'center',
-          height: `${headerVh}vh`
+          height: `${headerVh}vh`,
+          gap: '15px'
         }}
       >
         <img src={`${import.meta.env.BASE_URL}/logo.png`}
-             style={{ height: '80%', borderRadius: '5px' }} />
+            style={{ height: '80%', borderRadius: '5px' }} />
+
+        <Menu items={navItems}
+              mode="horizontal" 
+              theme="dark"
+              defaultSelectedKeys={location.pathname.replace('/AD/', '')}
+              style={{ flex: 1, 
+                       minWidth: 0, 
+                       height: `${headerVh}vh` }}
+              onClick={e => navigate(`/AD/${e.key}`)} />
       </Header>
 
       <Content>
@@ -28,7 +47,11 @@ function App() {
               minHeight: `${100 - headerVh}vh`,
             }}
         >
-          <Dashboard />
+          <Routes>
+            <Route path="/AD" element={<Dashboard />} />
+            <Route path="/AD/Dashboard" element={<Dashboard />} />
+            <Route path="/AD/admin" element={<Admin />} />
+          </Routes>
         </div>
       </Content>
     </Layout>

@@ -116,7 +116,7 @@ const Dashboard = () => {
           }
 
           // details data
-          const detailsResponse = await fetch(`${API_BASE_URL}/role-pipeline/${encodeURIComponent(selectedTitle)}/details`);
+          const detailsResponse = await fetch(`${API_BASE_URL}/role-pipeline/titles/${encodeURIComponent(selectedTitle)}`);
 
           if (detailsResponse.status === 200) {
             const data = await detailsResponse.json();

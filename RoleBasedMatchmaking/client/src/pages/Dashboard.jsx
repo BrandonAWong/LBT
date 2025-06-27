@@ -125,8 +125,12 @@ const Dashboard = () => {
               key: index,
               label: key,
               children: typeof value === 'boolean'
-                ? value ? 'Yes' : 'No'
-                : value
+                ? value === true 
+                  ? 'Yes' 
+                  : 'No'
+                : value != null
+                  ? value
+                  : 'N/A'
             }));
 
             setEllipseItems(transformed);

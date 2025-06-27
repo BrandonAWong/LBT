@@ -32,7 +32,7 @@ const Admin = () => {
             key: item.id,
             jobTitle: item.title
           }));
-          console.log(data);
+
           setTitles(transformed);
         }
         else {

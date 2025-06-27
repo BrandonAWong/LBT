@@ -64,12 +64,12 @@ namespace RoleDashboard.Controllers
         }
 
         [HttpPost, Route("titles")]
-        public async Task<IActionResult> CreateTitleDetail([FromBody] TitleDetail title)
+        public async Task<ActionResult<int>> CreateTitleDetail([FromBody] TitleDetail title)
         {
             try
             {
-                await _manager.CreateTitleDetail(title);
-                return Ok();
+                int newId = await _manager.CreateTitleDetail(title);
+                return Ok(newId);
             }
             catch (ConflictException e)
             {

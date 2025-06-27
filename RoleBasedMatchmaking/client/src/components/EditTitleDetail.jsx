@@ -4,7 +4,7 @@ import API_BASE_URL from '../config/api.js';
 
 const EditTitleDetail = ({ title, isNew=false, setIsNew }) => {
   const [form] = Form.useForm()
-  const [titleDetails, setTitleDetails] = useState({});
+  const [showForm, setShowForm] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
     useEffect(() => {
@@ -14,7 +14,6 @@ const EditTitleDetail = ({ title, isNew=false, setIsNew }) => {
 
           if (response.ok) {
             const data = await response.json();
-            setTitleDetails(data);
 
             form.setFieldsValue({
               id: data.id,
@@ -32,9 +31,12 @@ const EditTitleDetail = ({ title, isNew=false, setIsNew }) => {
               docusign: data.docusign,
               officeLicense: data.officeLicense,
               zoomAccount: data.zoomAccount,
+              corvu: data.corvu,
               distributionGroup: data.distributionGroup,
               securityGroup: data.securityGroup
             })
+
+            setShowForm(true);
           }
           else {
             throw new Error(`Response status: ${response.status}`);
@@ -51,6 +53,7 @@ const EditTitleDetail = ({ title, isNew=false, setIsNew }) => {
 
   useEffect(() => {
     if (isNew) {
+      setShowForm(true);
       form.resetFields();
     }
   }, [isNew]);
@@ -74,7 +77,12 @@ const EditTitleDetail = ({ title, isNew=false, setIsNew }) => {
 
     if (response.ok) {
       messageApi.open({ type: 'success', content: 'Saved'})
-      setIsNew(false);
+
+      if (isNew) {
+        setIsNew(false);
+        form.setFieldValue('id', await response.json());
+      }
+      
     }
     else if (response.status === 409) {
       messageApi.open({ type: 'error', content: response.json().then(r => r.error)})
@@ -88,13 +96,30 @@ const EditTitleDetail = ({ title, isNew=false, setIsNew }) => {
     <Card title="Job Title Details">
       {contextHolder}
       
-      {Object.keys(titleDetails).length === 0 && isNew === false ? (
+      {showForm != true ? (
         <Skeleton paragraph={{ rows: 7, width: 875 }} />
       ) : (
         <Form form={form}
-              labelCol={{ span: 5 }}>
+              labelCol={{ span: 5 }}
+              initialValues={{
+                activeDirectory: false,
+                email: false,
+                phoneNumber: false,
+                ellipseAccess: false,
+                ellipsePosition: false,
+                hastus: false,
+                transitMaster: false,
+                mdt: false,
+                adobeAcrobat: false,
+                docusign: false,
+                officeLicense: false,
+                zoomAccount: false,
+                corvu: false,
+              }}>
 
-          <Form.Item name="id" hidden />
+          <Form.Item name="id" hidden preserve={true}>
+            <Input />
+          </Form.Item>
               
           {/* title + department */}
           <div style={{display: 'flex', gap: '15px'}}>
@@ -173,6 +198,10 @@ const EditTitleDetail = ({ title, isNew=false, setIsNew }) => {
 
             <Form.Item name="zoomAccount" valuePropName="checked">
               <Checkbox>Zoom Account</Checkbox>
+            </Form.Item>
+
+            <Form.Item name="corvu" valuePropName="checked">
+              <Checkbox>CorVu</Checkbox>
             </Form.Item>
           </div>
 

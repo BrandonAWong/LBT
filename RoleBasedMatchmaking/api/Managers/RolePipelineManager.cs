@@ -27,12 +27,13 @@ namespace RoleDashboard.Managers
             return await _context.TitleDetails.FirstOrDefaultAsync(td => td.Title.ToLower() == title.ToLower());
         }
 
-        internal async Task CreateTitleDetail(TitleDetail title)
+        internal async Task<int> CreateTitleDetail(TitleDetail title)
         {
             try
             {
-                await _context.AddAsync(title);
+                var newTitle = await _context.AddAsync(title);
                 await _context.SaveChangesAsync();
+                return newTitle.Entity.Id;
             }
             catch (DbUpdateException e)
             {

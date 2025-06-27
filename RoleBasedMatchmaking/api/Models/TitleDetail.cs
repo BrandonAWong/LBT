@@ -23,6 +23,7 @@ namespace RoleDashboard.Models
         public bool? Docusign { get; set; }
         public bool? OfficeLicense { get; set; }
         public bool? ZoomAccount { get; set; }
+        public bool? Corvu { get; set; }
         public string? DistributionGroup { get; set; }
         public string? SecurityGroup { get; set; }
     }

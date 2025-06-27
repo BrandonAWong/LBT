@@ -6,7 +6,6 @@ import { Layout, Menu } from 'antd';
 const { Header, Content } = Layout;
 
 function App() {
-  const headerVh = 5
   const navItems = ['Dashboard', 'Admin'].map(key => ({
     key,
     label: key
@@ -24,7 +23,6 @@ function App() {
           width: '100%',
           display: 'flex',
           alignItems: 'center',
-          height: `${headerVh}vh`,
           gap: '15px'
         }}
       >
@@ -36,15 +34,13 @@ function App() {
               theme="dark"
               defaultSelectedKeys={location.pathname.replace('/AD/', '')}
               style={{ flex: 1, 
-                       minWidth: 0, 
-                       height: `${headerVh}vh` }}
+                       minWidth: 0 }}
               onClick={e => navigate(`/AD/${e.key}`)} />
       </Header>
 
       <Content>
         <div style={{
               padding: 24,
-              minHeight: `${100 - headerVh}vh`,
             }}
         >
           <Routes>

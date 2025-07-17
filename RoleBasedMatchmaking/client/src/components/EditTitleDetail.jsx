@@ -42,7 +42,8 @@ const EditTitleDetail = ({ title, isNew=false, setIsNew }) => {
           else {
             throw new Error(`Response status: ${response.status}`);
           }
-        } catch (error) {
+        } 
+        catch (error) {
             messageApi.open({ type: 'error', content: error.message });
         }
       }

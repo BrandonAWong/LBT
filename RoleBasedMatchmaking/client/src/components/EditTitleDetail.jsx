@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, Skeleton, message, Form, Input, Checkbox, Button } from 'antd';
 import API_BASE_URL from '../config/api.js';
+import HTTP_STATUS from '../constants/httpStatus.js'
 
 const EditTitleDetail = ({ title, isNew=false, setIsNew }) => {
   const [form] = Form.useForm()
@@ -84,7 +85,7 @@ const EditTitleDetail = ({ title, isNew=false, setIsNew }) => {
       }
       
     }
-    else if (response.status === 409) {
+    else if (response.status === HTTP_STATUS.CONFLICT) {
       messageApi.open({ type: 'error', content: response.json().then(r => r.error)})
     }
     else {

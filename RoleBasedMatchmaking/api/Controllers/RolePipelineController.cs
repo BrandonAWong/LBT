@@ -8,7 +8,7 @@ using RoleDashboard.Models.DTO;
 
 namespace RoleDashboard.Controllers
 {
-    [Route("api/role-pipeline")]
+    [Route("provisioning-api/role-pipeline")]
     [ApiController]
     [Produces("application/json")]
     public class RolePipelineController : Controller

@@ -4,7 +4,7 @@ using RoleDashboard.Models;
 
 namespace RoleDashboard.Controllers
 {
-    [Route("api/active-directory")]
+    [Route("provisioning-api/active-directory")]
     [ApiController]
     [Produces("application/json")]
     public class ActiveDirectoryController : Controller

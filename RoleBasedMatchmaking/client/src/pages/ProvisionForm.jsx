@@ -74,9 +74,6 @@ const ProvisionForm = () => {
       const data = await detailsResponse.json();
       form.setFieldValue('department', data.department)
     }
-    else if (detailsResponse.status === HTTP_STATUS.NO_CONTENT) {
-      form.setFieldValue('department', '')
-    }
 
     const adResponse = await fetch(`${API_BASE_URL}/active-directory/titles/${encodeURIComponent(title)}/groups?raw=true`);
 
@@ -97,18 +94,25 @@ const ProvisionForm = () => {
   };
 
   const submitForm = async () => {
-    const response = await fetch(`${API_BASE_URL}/`, {
-      method: 'POST',
-      body: JSON.stringify(form.getFieldsValue()),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (response.OK) {
-      messageApi.open({ type: 'success', content: 'Submitted' });
+    try {
+      const response = await fetch(`${API_BASE_URL}/`, {
+        method: 'POST',
+        body: JSON.stringify(form.getFieldsValue()),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.OK) {
+        form.resetFields();
+        setSelectedDistributionGroups([])
+        messageApi.open({ type: 'success', content: 'Submitted' });
+      }
+      else {
+        throw new Error(`Response status: ${response.status}`);
+      }
     }
-    else {
+    catch (error) {
       messageApi.open({ type: 'error', content: error.message });
     }
   }
@@ -194,14 +198,14 @@ const ProvisionForm = () => {
           </Card>
 
           <Card style={{maxHeight: "786px", overflowY: "auto"}}>
-              <Form.Item name="distributionGroups"
-                        label="Email Distribution Lists"
-                        valuePropName="checked">
-                <Checkbox.Group options={distributionGroups}
-                                value={selectedDistributionGroups}
-                                onChange={setSelectedDistributionGroups}
-                                style={{ display: 'flex', flexDirection: 'column', gap: 8 }} />
-              </Form.Item>
+            <Form.Item name="distributionGroups"
+                      label="Email Distribution Lists"
+                      valuePropName="checked">
+              <Checkbox.Group options={distributionGroups}
+                              value={selectedDistributionGroups}
+                              onChange={setSelectedDistributionGroups}
+                              style={{ display: 'flex', flexDirection: 'column', gap: 10 }} />
+            </Form.Item>
           </Card>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>

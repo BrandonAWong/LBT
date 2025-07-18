@@ -11,7 +11,7 @@ import { useState, useEffect } from 'react';
 import API_BASE_URL from '../config/api.js';
 import HTTP_STATUS from '../constants/httpStatus.js'
 
-const ProvisionForm = () => {
+const OnboardingForm = () => {
   const inputWidth = '500px';
   const [form] = Form.useForm()
   const [messageApi, contextHolder] = message.useMessage();
@@ -60,7 +60,8 @@ const ProvisionForm = () => {
         const response = await fetch(`${API_BASE_URL}/role-pipeline/form-distribution-groups`)
 
         if (response.ok) {
-          setDistributionGroups(await response.json());
+          const data = await response.json();
+          setDistributionGroups(data.map(group => group.name));
         }
         else {
           throw new Error(`Response status: ${response.status}`);
@@ -152,7 +153,7 @@ const ProvisionForm = () => {
             </Form.Item>
 
             <Form.Item name="employeeId"
-                      label="Employee # (4-Digit Number)"
+                      label="Employee ID"
                       rules={[
                         {
                           validator(_, value) {
@@ -164,8 +165,8 @@ const ProvisionForm = () => {
                         }
                       ]}>
               <InputNumber size="large"
-                          style={{width: inputWidth}}
-                          controls={false} />
+                           style={{width: inputWidth}}
+                           controls={false} />
             </Form.Item>
 
             <Form.Item name="title"
@@ -223,4 +224,4 @@ const ProvisionForm = () => {
   )
 };
 
-export default ProvisionForm;
+export default OnboardingForm;

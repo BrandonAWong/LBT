@@ -11,10 +11,10 @@
 import { useState, useEffect } from 'react';
 import { message } from 'antd';
 import EditTitleDetail from '../components/EditTitleDetail.jsx';
-import JobTitleDetailsTable from "../components/JobTitleDetailsTable";
+import JobTitleDetailsTable from "../components/JobTitleDetailsTable.jsx";
 import API_BASE_URL from '../config/api.js';
 
-const Admin = () => {
+const AdminTitleDetails = () => {
   const [titles, setTitles] = useState([]);
   const [selectedTitle, setSelectedTitle] = useState('');
   const [isNew, setIsNew] = useState(false);
@@ -66,4 +66,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default AdminTitleDetails;

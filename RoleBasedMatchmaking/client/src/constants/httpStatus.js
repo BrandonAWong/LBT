@@ -9,4 +9,4 @@ const HTTP_STATUS = {
   INTERNAL_SERVER_ERROR: 500
 };
 
-export default HTTP_STATUS
+export default HTTP_STATUS;

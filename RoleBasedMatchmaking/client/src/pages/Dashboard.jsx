@@ -5,6 +5,7 @@ import JobTitleTable from '../components/JobTitleTable.jsx';
 import GroupsTable from '../components/GroupsTable.jsx';
 import CardDetails from '../components/CardDetails.jsx';
 import API_BASE_URL from '../config/api.js';
+import HTTP_STATUS from '../constants/httpStatus.js'
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -118,7 +119,7 @@ const Dashboard = () => {
           // details data
           const detailsResponse = await fetch(`${API_BASE_URL}/role-pipeline/titles/${encodeURIComponent(selectedTitle)}`);
 
-          if (detailsResponse.status === 200) {
+          if (detailsResponse.status === HTTP_STATUS.OK) {
             const data = await detailsResponse.json();
 
             const transformed = Object.entries(data).map(([key, value], index) => ({
@@ -136,7 +137,7 @@ const Dashboard = () => {
             setEllipseItems(transformed);
           }
           else {
-            if (detailsResponse.status != 204) {
+            if (detailsResponse.status != HTTP_STATUS.NO_CONTENT) {
               throw new Error(`Response status: ${detailsResponse.status}`);
             }
             

@@ -11,5 +11,6 @@ namespace RoleDashboard.Contexts
         }
 
         public DbSet<TitleDetail> TitleDetails { get; set; }
+        public DbSet<FormDistributionGroup> FormDistributionGroups { get; set; }
     }
 }

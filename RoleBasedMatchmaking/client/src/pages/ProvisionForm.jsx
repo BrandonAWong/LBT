@@ -11,27 +11,13 @@ import { useState, useEffect } from 'react';
 import API_BASE_URL from '../config/api.js';
 import HTTP_STATUS from '../constants/httpStatus.js'
 
-  const distributionGroups = [
-    "ALLUSERS - 68th Street", "ALLUSERS - Anaheim Site", "Articulated Bus Deployment",
-    "COMM & PLANNING", "DIRECTORS", "Ellipse Stream Leaders", "EMERGENCY TEAM",
-    "ENERGY TEAM", "EOMLIST", "ESHOP", "EXTEAM", "FACILITIES DEPT", "FACILITIES REQUEST",
-    "FARE REPORTS", "FINANCE", "GM DEPT", "GOVERNMENT RELATIONS", "GUARDSMARK", 
-    "HR", "IT", "LANTEAM", "LB POLICE", "MAINT", "MAINT ADMIN", "MAINT LEAD", 
-    "MAINT SUPV", "MAINT MGR", "MANAGERS", "MARKETING/CS", "MECHANICS", "OP-SUPS",
-    "PARTS DEPT", "PAYROLL", "PURCHASING","QRT MGMT", "QUALITY ASSURANCE",
-    "RADIO DISPATCH ALERT", "RISK MANAGEMENT", "SD STAFF", "SERVICE ALERT", 
-    "SERVICE QUALITY COMMITTEE", "SPECIAL", "SPECIAL INTERNET", "STAFF-NON-REPRESENTED",
-    "STAFF-REPRESENTED", "SZ TECHS", "TELE INFO", "TRAINING DEPT", "Transit & Visitor Information Center",
-    "Transit Services Supervisors", "UTILITIES", "WEBSITE", "XB SUPERVISORS"
-];
-
 const ProvisionForm = () => {
   const inputWidth = '500px';
   const [form] = Form.useForm()
   const [messageApi, contextHolder] = message.useMessage();
   const [titles, setTitles] = useState([]);
   const [titleAutoComp, setTitleAutoComp] = useState([]);
-  const [selectedDistributionGroups, setSelectedDistributionGroups] = useState([]);
+  const [distributionGroups, setDistributionGroups] = useState([]);
   const [selectedEquipments, setSelectedEquipments] = useState([]);
   const equipments = [
     { label: "Cell Phone", value: "Cell Phone" },
@@ -59,13 +45,34 @@ const ProvisionForm = () => {
         else {
           throw new Error(`Response status: ${response.status}`);
         }
-      } catch (error) {
+      } 
+      catch (error) {
           messageApi.open({ type: 'error', content: error.message });
       }
     }
 
     getTitles();
   }, [])
+
+  useEffect(() => {
+    async function getFormDistributionGroups() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/role-pipeline/form-distribution-groups`)
+
+        if (response.ok) {
+          setDistributionGroups(await response.json());
+        }
+        else {
+          throw new Error(`Response status: ${response.status}`);
+        }
+      } 
+      catch (error) {
+          messageApi.open({ type: 'error', content: error.message });
+      }
+    }
+
+    getFormDistributionGroups();
+  }, []);
 
   const titleSelected = async (title) => {
     const detailsResponse = await fetch(`${API_BASE_URL}/role-pipeline/titles/${encodeURIComponent(title)}`);
@@ -75,13 +82,13 @@ const ProvisionForm = () => {
       form.setFieldValue('department', data.department)
     }
 
-    const adResponse = await fetch(`${API_BASE_URL}/active-directory/titles/${encodeURIComponent(title)}/groups?raw=true`);
+    const adResponse = await fetch(`${API_BASE_URL}/active-directory/titles/${encodeURIComponent(title)}/groups`);
 
     if (adResponse.ok) {
       const data = await adResponse.json();
 
       const transformed = Object.entries(data).map(([key, value]) => ({
-        group: key.split(',')[0].replace('CN=', ''),
+        group: key,
         count: value
       }));
 
@@ -89,7 +96,7 @@ const ProvisionForm = () => {
       const newGroups = transformed
         .filter(t => t.count === maxGroupMembers && distributionGroups.includes(t.group))
         .map(t => t.group);
-      setSelectedDistributionGroups(newGroups);
+      form.setFieldValue('distributionGroups', newGroups);
     }
   };
 
@@ -105,7 +112,6 @@ const ProvisionForm = () => {
       
       if (response.OK) {
         form.resetFields();
-        setSelectedDistributionGroups([])
         messageApi.open({ type: 'success', content: 'Submitted' });
       }
       else {
@@ -178,12 +184,12 @@ const ProvisionForm = () => {
                       label="Department"
                       rules={[{ required: true, message: 'Department is required' }]}>
               <Input size="large"
-                    style={{width: inputWidth}} />
+                     style={{width: inputWidth}} />
             </Form.Item>
             <Form.Item name="ellipseClone"
-                      label="Ellipse Clone (Employee Name & ID)">
+                       label="Ellipse Clone (Employee Name & ID)">
               <Input size="large"
-                    style={{width: inputWidth}} />
+                     style={{width: inputWidth}} />
             </Form.Item>
             <Form.Item name="equipment"
                       label="Company Equipment List">
@@ -199,11 +205,8 @@ const ProvisionForm = () => {
 
           <Card style={{maxHeight: "786px", overflowY: "auto"}}>
             <Form.Item name="distributionGroups"
-                      label="Email Distribution Lists"
-                      valuePropName="checked">
+                      label="Email Distribution Lists">
               <Checkbox.Group options={distributionGroups}
-                              value={selectedDistributionGroups}
-                              onChange={setSelectedDistributionGroups}
                               style={{ display: 'flex', flexDirection: 'column', gap: 10 }} />
             </Form.Item>
           </Card>

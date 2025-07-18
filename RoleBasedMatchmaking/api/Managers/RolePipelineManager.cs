@@ -64,5 +64,15 @@ namespace RoleDashboard.Managers
                 await _context.SaveChangesAsync();
             }
         }
+
+        #region Form
+        internal async Task<List<string>> GetFormDistributionGroups()
+        {
+            return await _context.FormDistributionGroups
+                .Select(fdg => fdg.Name)
+                .Order()
+                .ToListAsync();
+        }
+        #endregion
     }
 }

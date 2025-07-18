@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RoleDashboard.Contexts;
 using RoleDashboard.Exceptions;
@@ -130,5 +129,24 @@ namespace RoleDashboard.Controllers
                 });
             }
         }
+
+        #region Form
+        [HttpGet, Route("form-distribution-groups")]
+        public async Task<ActionResult<List<string>>> GetFormDistributionGroups()
+        {
+            try
+            {
+                return Ok(await _manager.GetFormDistributionGroups());
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new
+                {
+                    error = e.Message,
+                    message = "An unexpected error occured"
+                });
+            }
+        }
+        #endregion
     }
 }

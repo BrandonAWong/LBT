@@ -164,10 +164,8 @@ const Dashboard = () => {
     >
       {contextHolder}
       <div className="flex-row">
-        <div style={{
-                flex: 0.8
-            }}
-            className="flex-col">
+        <div style={{flex: 1}}
+             className="flex-col">
             <div ref={jobTitleTable}>
               <JobTitleTable data={titles} 
                              setSelectedTitle={setSelectedTitle}
@@ -176,10 +174,8 @@ const Dashboard = () => {
             <GroupsTable data={groups} />
         </div>
   
-        <div style={{
-                flex: 2
-            }}
-            className="flex-col">
+        <div style={{flex: 2}}
+             className="flex-col">
             <CardDetails items={ellipseItems}
                          title="Profile Details" />
 

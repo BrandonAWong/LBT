@@ -7,7 +7,7 @@ using RoleDashboard.Models.DTO;
 
 namespace RoleDashboard.Controllers
 {
-    [Route("provisioning-api/role-pipeline")]
+    [Route("onboarding-api/role-pipeline")]
     [ApiController]
     [Produces("application/json")]
     public class RolePipelineController : Controller
@@ -132,11 +132,29 @@ namespace RoleDashboard.Controllers
 
         #region Form
         [HttpGet, Route("form-distribution-groups")]
-        public async Task<ActionResult<List<string>>> GetFormDistributionGroups()
+        public async Task<ActionResult<List<FormDistributionGroup>>> GetFormDistributionGroups()
         {
             try
             {
                 return Ok(await _manager.GetFormDistributionGroups());
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, new
+                {
+                    error = e.Message,
+                    message = "An unexpected error occured"
+                });
+            }
+        }
+
+        [HttpDelete, Route("form-distribution-groups/{id}")]
+        public async Task<IActionResult> DeleteFormDistributionGroup([FromRoute] int id)
+        {
+            try
+            {
+                await _manager.DeleteFormDistributionGroup(id);
+                return Ok();
             }
             catch (Exception e)
             {

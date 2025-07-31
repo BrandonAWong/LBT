@@ -66,12 +66,22 @@ namespace RoleDashboard.Managers
         }
 
         #region Form
-        internal async Task<List<string>> GetFormDistributionGroups()
+        internal async Task<List<FormDistributionGroup>> GetFormDistributionGroups()
         {
             return await _context.FormDistributionGroups
-                .Select(fdg => fdg.Name)
-                .Order()
+                .OrderBy(fdg => fdg.Name)
                 .ToListAsync();
+        }
+
+        internal async Task DeleteFormDistributionGroup(int id)
+        {
+            FormDistributionGroup? record = await _context.FormDistributionGroups.FirstOrDefaultAsync(fdg => fdg.Id == id);
+
+            if (record != null)
+            {
+                _context.FormDistributionGroups.Remove(record);
+                await _context.SaveChangesAsync();
+            }
         }
         #endregion
     }

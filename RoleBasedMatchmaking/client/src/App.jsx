@@ -1,7 +1,7 @@
-import { Suspense } from 'react';
 import NavMenu from './components/NavMenu.jsx';
 import RoutesConfig from './components/RoutesConfig.jsx';
 import { Layout, Spin } from 'antd';
+import { Suspense } from 'react';
 
 const { Header, Content } = Layout;
 

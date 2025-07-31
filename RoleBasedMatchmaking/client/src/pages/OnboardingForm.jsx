@@ -6,7 +6,8 @@ import { Card,
          InputNumber,
          AutoComplete, 
          Checkbox, 
-         Button } from 'antd';
+         Button,
+         Result } from 'antd';
 import { useState, useEffect } from 'react';
 import API_BASE_URL from '../config/api.js';
 import HTTP_STATUS from '../constants/httpStatus.js'
@@ -19,6 +20,7 @@ const OnboardingForm = () => {
   const [titleAutoComp, setTitleAutoComp] = useState([]);
   const [distributionGroups, setDistributionGroups] = useState([]);
   const [selectedEquipments, setSelectedEquipments] = useState([]);
+  const [showResult, setShowResult] = useState(false);
   const equipments = [
     { label: "Cell Phone", value: "Cell Phone" },
     { label: "Laptop", value: "Laptop", disabled: selectedEquipments.includes('Desktop') },
@@ -103,7 +105,7 @@ const OnboardingForm = () => {
 
   const submitForm = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/`, {
+      const response = await fetch(`${API_BASE_URL}/servicenow/tickets`, {
         method: 'POST',
         body: JSON.stringify(form.getFieldsValue()),
         headers: {
@@ -111,8 +113,10 @@ const OnboardingForm = () => {
         },
       });
       
-      if (response.OK) {
+      if (response.status === HTTP_STATUS.CREATED) {
         form.resetFields();
+        setSelectedEquipments([]);
+        setShowResult(true);
         messageApi.open({ type: 'success', content: 'Submitted' });
       }
       else {
@@ -125,102 +129,113 @@ const OnboardingForm = () => {
   }
 
   return (
-    <Card title="New Employee IT Form"
-          style={{width: '50%', margin: "auto"}}>
-      {contextHolder}
+    <>
+      {showResult
+        ? <Result
+            status="success"
+            title="Employee Form successfully submitted!"
+            extra={[
+              <Button type="primary" onClick={() => setShowResult(false)}>Close</Button>
+            ]}
+            style={{marginTop: "12%"}} />
+        : <Card title="New Employee IT Form"
+                style={{width: '50%', margin: "auto"}}>
+          {contextHolder}
 
-      <Form form={form}
-            layout="vertical"
-            onFinish={submitForm}>
-        <div style={{display: "flex", gap: '40px'}}>
-          <Card>
-            <Form.Item name="startDate"
-                      label="Start Date"
-                      rules={[{ required: true, message: 'Start Date is required' }]}>
-              <DatePicker allowClear={false}
-                          size="large"
-                          format="M/D/YYYY"
-                          style={{width: inputWidth}}
-                          placeholder=""
-                          placement="bottomRight" />
-            </Form.Item>
+          <Form form={form}
+                layout="vertical"
+                onFinish={submitForm}>
+            <div style={{display: "flex", gap: '40px'}}>
+              <Card>
+                <Form.Item name="startDate"
+                          label="Start Date"
+                          rules={[{ required: true, message: 'Start Date is required' }]}>
+                  <DatePicker allowClear={false}
+                              size="large"
+                              format="M/D/YYYY"
+                              style={{width: inputWidth}}
+                              placeholder=""
+                              placement="bottomRight" />
+                </Form.Item>
 
-            <Form.Item name="employeeName"
-                      label="Employee Name"
-                      rules={[{ required: true, message: 'Employee Name is required' }]}>
-              <Input size="large"
-                     style={{width: inputWidth}} />
-            </Form.Item>
+                <Form.Item name="employeeName"
+                          label="Employee Name"
+                          rules={[{ required: true, message: 'Employee Name is required' }]}>
+                  <Input size="large"
+                        style={{width: inputWidth}} />
+                </Form.Item>
 
-            <Form.Item name="employeeId"
-                      label="Employee ID"
-                      rules={[
-                        {
-                          validator(_, value) {
-                            if (!value || value.toString().length === 4) {
-                              return Promise.resolve();
+                <Form.Item name="employeeId"
+                          label="Employee ID"
+                          rules={[
+                            {
+                              validator(_, value) {
+                                if (!value || value.toString().length === 4) {
+                                  return Promise.resolve();
+                                }
+                                return Promise.reject('Must be 4 digits');  
+                              }
                             }
-                            return Promise.reject('Must be 4 digits');  
-                          }
-                        }
-                      ]}>
-              <InputNumber size="large"
-                           style={{width: inputWidth}}
-                           controls={false} />
-            </Form.Item>
+                          ]}>
+                  <InputNumber size="large"
+                              style={{width: inputWidth}}
+                              controls={false} />
+                </Form.Item>
 
-            <Form.Item name="title"
-                      label="Title"
-                      rules={[{ required: true, message: 'Title is required' }]}>
-              <AutoComplete size="large"
-                            style={{width: inputWidth}}
-                            options={titleAutoComp}
-                            onSearch={text => 
-                              setTitleAutoComp(titles.filter(t => 
-                                t.value.toLowerCase().startsWith(text.toLowerCase())))} 
-                            onSelect={titleSelected}/>
-              </Form.Item>
+                <Form.Item name="title"
+                          label="Title"
+                          rules={[{ required: true, message: 'Title is required' }]}>
+                  <AutoComplete size="large"
+                                style={{width: inputWidth}}
+                                options={titleAutoComp}
+                                onSearch={text => 
+                                  setTitleAutoComp(titles.filter(t => 
+                                    t.value.toLowerCase().startsWith(text.toLowerCase())))} 
+                                onSelect={titleSelected}/>
+                  </Form.Item>
 
-            <Form.Item name="department"
-                      label="Department"
-                      rules={[{ required: true, message: 'Department is required' }]}>
-              <Input size="large"
-                     style={{width: inputWidth}} />
-            </Form.Item>
-            <Form.Item name="ellipseClone"
-                       label="Ellipse Clone (Employee Name & ID)">
-              <Input size="large"
-                     style={{width: inputWidth}} />
-            </Form.Item>
-            <Form.Item name="equipment"
-                      label="Company Equipment List">
-              <Checkbox.Group options={equipments}
-                              value={selectedEquipments}
-                              onChange={setSelectedEquipments} />
-            </Form.Item>
-            <Form.Item name="offices"
-                      label="Offices">
-              <Checkbox.Group options={["LBTCO", "LBT1", "LBT2"]} />
-            </Form.Item>
-          </Card>
+                <Form.Item name="department"
+                          label="Department"
+                          rules={[{ required: true, message: 'Department is required' }]}>
+                  <Input size="large"
+                        style={{width: inputWidth}} />
+                </Form.Item>
+                <Form.Item name="ellipseClone"
+                          label="Ellipse Clone (Employee Name & ID)">
+                  <Input size="large"
+                        style={{width: inputWidth}} />
+                </Form.Item>
+                <Form.Item name="equipment"
+                          label="Company Equipment List">
+                  <Checkbox.Group options={equipments}
+                                  value={selectedEquipments}
+                                  onChange={setSelectedEquipments} />
+                </Form.Item>
+                <Form.Item name="offices"
+                          label="Offices">
+                  <Checkbox.Group options={["LBTCO", "LBT1", "LBT2"]} />
+                </Form.Item>
+              </Card>
 
-          <Card style={{maxHeight: "786px", overflowY: "auto"}}>
-            <Form.Item name="distributionGroups"
-                      label="Email Distribution Lists">
-              <Checkbox.Group options={distributionGroups}
-                              style={{ display: 'flex', flexDirection: 'column', gap: 10 }} />
-            </Form.Item>
-          </Card>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
-          <Button type="primary" 
-                  htmlType="submit"
-                  size="large">
-            Submit
-          </Button>
-        </div>
-      </Form>
-    </Card>
+              <Card style={{maxHeight: "786px", overflowY: "auto"}}>
+                <Form.Item name="distributionGroups"
+                          label="Email Distribution Lists">
+                  <Checkbox.Group options={distributionGroups}
+                                  style={{ display: 'flex', flexDirection: 'column', gap: 10 }} />
+                </Form.Item>
+              </Card>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 20 }}>
+              <Button type="primary" 
+                      htmlType="submit"
+                      size="large">
+                Submit
+              </Button>
+            </div>
+          </Form>
+        </Card>
+      }
+    </>
   )
 };
 

@@ -41,7 +41,7 @@ namespace RoleDashboard.Managers
             }
 
             entry.Close();
-            return titles;
+            return titles.OrderBy(t => t.Key).ToDictionary();
         }
 
         internal Dictionary<string, int> GetGroupsByTitle(string title, bool raw = false)
@@ -56,7 +56,7 @@ namespace RoleDashboard.Managers
             };
 
             searcher.PropertiesToLoad.Add("memberOf");
-            Dictionary<string, int> groups = new(StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, int> groups = new();
 
             foreach (SearchResult result in searcher.FindAll())
             {

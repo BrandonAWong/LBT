@@ -50,18 +50,14 @@ const AdminTitleDetails = () => {
     <div style={{display: 'flex', gap: '10px'}}>
       {contextHolder}
 
-      <div style={{width: '27.5%'}}>
-        <JobTitleDetailsTable data={titles}
-                              setData={setTitles} 
-                              setSelectedTitle={setSelectedTitle}
-                              setIsNew={setIsNew} />
-      </div>
-      
-      <div>
-        <EditTitleDetail title={selectedTitle} 
-                         isNew={isNew}
-                         setIsNew={setIsNew} />
-      </div>
+      <JobTitleDetailsTable data={titles}
+                            setData={setTitles} 
+                            setSelectedTitle={setSelectedTitle}
+                            setIsNew={setIsNew} />
+    
+      <EditTitleDetail title={selectedTitle} 
+                        isNew={isNew}
+                        setIsNew={setIsNew} />
     </div>
   );
 };

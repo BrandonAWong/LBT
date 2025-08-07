@@ -9,6 +9,7 @@ import { Card,
          Button,
          Result } from 'antd';
 import { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext.jsx';
 import API_BASE_URL from '../config/api.js';
 import HTTP_STATUS from '../constants/httpStatus.js'
 
@@ -29,6 +30,7 @@ const OnboardingForm = () => {
     { label: "Keys", value: "Keys" },
     { label: "Badge", value: "Badge" },
   ];
+  const { user } = useAuth();
 
   useEffect(() => {
     async function getTitles() {
@@ -76,6 +78,10 @@ const OnboardingForm = () => {
 
     getFormDistributionGroups();
   }, []);
+
+  useEffect(() => {
+    form.setFieldValue("openedBy", user?.name);
+  }, [user]);
 
   const titleSelected = async (title) => {
     const detailsResponse = await fetch(`${API_BASE_URL}/role-pipeline/titles/${encodeURIComponent(title)}`);
@@ -147,6 +153,10 @@ const OnboardingForm = () => {
                 onFinish={submitForm}>
             <div style={{display: "flex", gap: '40px'}}>
               <Card>
+                <Form.Item name="openedBy" hidden>
+                  <Input />
+                </Form.Item>
+
                 <Form.Item name="startDate"
                           label="Start Date"
                           rules={[{ required: true, message: 'Start Date is required' }]}>

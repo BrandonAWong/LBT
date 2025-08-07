@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,9 @@ builder.Services.AddScoped<RoleDashboard.Services.ConfigurationService>();
 builder.Services.AddDbContext<RoleDashboard.Contexts.RolePipelineContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("monet"))
     .UseSnakeCaseNamingConvention());
+
+builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
+builder.Services.AddAuthentication();
 
 var app = builder.Build();
 
@@ -34,5 +39,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();

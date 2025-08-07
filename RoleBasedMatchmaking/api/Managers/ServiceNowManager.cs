@@ -23,10 +23,9 @@ namespace RoleDashboard.Managers
 
                 client.DefaultRequestHeaders.Authorization = new("Basic", Convert.ToBase64String(credentials));
 
-                ServiceNowIncidentPayload postPayload = new()
+                ServiceNowIncident incident = new()
                 {
-                    short_description =
-                        @$"Employee Name: {payload.EmployeeName}
+                    description = @$"Employee Name: {payload.EmployeeName}
                         Start Date: {payload.StartDate.ToString("M/d/yyyy")}
                         {(payload.EmployeeId != null ? $"Employee ID: {payload.EmployeeId}" : string.Empty)}
                         Title: {payload.Title}
@@ -35,14 +34,17 @@ namespace RoleDashboard.Managers
                         {(payload.Equipment.Count > 0 ? $"Equipment: {string.Join(", ", payload.Equipment)}" : string.Empty)}
                         {(payload.Offices.Count > 0 ? $"Offices: {string.Join(", ", payload.Offices)}" : string.Empty)}
                         {(payload.DistributionGroups.Count > 0 ? $"Distribution Groups: {string.Join(", ", payload.DistributionGroups)}" : string.Empty)}",
-                    assigned_to = "Gen IX",
+                    short_description = $"New Employee IT Request: {payload.EmployeeName} - {payload.Title} ({payload.Department})",
+                    assigned_to = "Admin GenIX",
+                    opened_by = payload.OpenedBy,
+                    category = "request",
+                    subcategory="New Hire"
                 };
 
                 HttpResponseMessage response = await client.PostAsync(
                     $"{_configService.GetServiceNowConfig("BaseUrl")}/now/table/incident",
-                    JsonContent.Create(postPayload));
-
-
+                    JsonContent.Create(incident));
+                
                 return response.Headers.Location;
             }
         }

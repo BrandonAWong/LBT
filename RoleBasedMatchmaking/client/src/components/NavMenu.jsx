@@ -1,15 +1,17 @@
 import { Menu } from 'antd';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext.jsx';
 import BASE_PATH from '../config/BasePath.js';
 
-const navItems = [
-  {
-    label: 'Dashboard',
-    key: 'dashboard',
-  },
+const allNavItems = [
   { 
     label: 'Form',
     key: 'form',
+  },
+  {
+    label: 'Dashboard',
+    key: 'dashboard',
   },
   {
     label: 'Admin',
@@ -24,6 +26,17 @@ const navItems = [
 const NavMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [navItems, setNavItems] = useState([]);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user != null && user.admin) {
+      setNavItems(allNavItems);
+    }
+    else {
+      setNavItems([allNavItems[0]]);
+    }
+  }, [user]);
 
   return (
     <Menu items={navItems}

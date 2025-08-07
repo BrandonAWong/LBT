@@ -47,7 +47,6 @@ namespace RoleDashboard.Managers
         internal Dictionary<string, int> GetGroupsByTitle(string title, bool raw = false)
         {
             DirectoryEntry entry = new($"LDAP://DC=corp,DC=lbtransit,DC=com");
-
             DirectorySearcher searcher = new(entry)
             {
                 ReferralChasing = ReferralChasingOption.All,
@@ -88,6 +87,44 @@ namespace RoleDashboard.Managers
 
             entry.Close();
             return groups;
+        }
+
+        internal List<string> GetGroupsByUsername(string username)
+        {   
+            DirectoryEntry entry = new($"LDAP://DC=corp,DC=lbtransit,DC=com");
+            DirectorySearcher searcher = new(entry)
+            {
+                ReferralChasing = ReferralChasingOption.All,
+                Filter = $"(&(objectClass=user)(sAMAccountName={CleanUsername(username)}))",
+                SearchScope = SearchScope.Subtree,
+            };
+
+            searcher.PropertiesToLoad.Add("memberOf");
+
+            DirectoryEntry? userEntry = searcher.FindOne()?.GetDirectoryEntry();
+            var memberOf = userEntry?.Properties["memberOf"];
+            return memberOf?.Cast<object>().Select(g
+                => g?
+                    .ToString()?
+                    .Split(',')
+                    .FirstOrDefault()?
+                    .Replace("CN=", string.Empty) ?? string.Empty)
+                    .ToList()
+            ?? new();
+        }
+
+        internal string? GetDisplayNameByUsername(string username)
+        {
+            DirectoryEntry entry = new($"LDAP://DC=corp,DC=lbtransit,DC=com");
+            DirectorySearcher searcher = new(entry)
+            {
+                ReferralChasing = ReferralChasingOption.All,
+                Filter = $"(&(objectClass=user)(sAMAccountName={CleanUsername(username)}))",
+                SearchScope = SearchScope.Subtree,
+            };
+            searcher.PropertiesToLoad.Add("displayName");
+            DirectoryEntry? userEntry = searcher.FindOne()?.GetDirectoryEntry();
+            return userEntry?.Properties["displayName"].Value?.ToString();
         }
 
         internal Dictionary<string, List<string>> GetCommonGroupsForAllTitles()
@@ -139,7 +176,7 @@ namespace RoleDashboard.Managers
                         Email = GetAdProperty(result, "userPrincipalName"),
                         Department = GetAdProperty(result, "department"),
                         Title = GetAdProperty(result, "title"),
-                    });   
+                    });
                 }
             }
 
@@ -155,6 +192,15 @@ namespace RoleDashboard.Managers
             }
 
             return string.Empty;
+        }
+
+        private string CleanUsername(string username)
+        {
+            string domain = @"LBTRANSIT\";
+            if (username.ToUpper().StartsWith(domain))
+                username = username.Remove(0, domain.Length);
+
+            return username;
         }
         #endregion
     }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using RoleDashboard.Contexts;
 using RoleDashboard.Managers;
 using RoleDashboard.Models;
 using RoleDashboard.Services;
@@ -11,9 +12,10 @@ namespace RoleDashboard.Controllers
     public class ServiceNowController : Controller
     {
         private readonly ServiceNowManager _serviceNowManager;
-        public ServiceNowController(ConfigurationService configService)
+
+        public ServiceNowController(ServiceNowManager serviceNowManager)
         {
-            _serviceNowManager = new(configService);
+            _serviceNowManager = serviceNowManager;
         }
 
         [HttpPost, Route("tickets")]
@@ -21,9 +23,9 @@ namespace RoleDashboard.Controllers
         {
             try
             {
-                Uri? sysId = await _serviceNowManager.CreateIncident(payload);
-                if (sysId is not null)
-                    return Created(sysId, null);
+                Uri? location = await _serviceNowManager.CreateIncident(payload);
+                if (location is not null)
+                    return Created(location, null);
 
                 throw new Exception("ServiceNow ticket unable to be created");
             }

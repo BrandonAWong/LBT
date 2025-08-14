@@ -13,6 +13,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<RoleDashboard.Managers.ActiveDirectoryManager>();
+builder.Services.AddScoped<RoleDashboard.Managers.ServiceNowManager>();
+builder.Services.AddScoped<RoleDashboard.Managers.ConstantsManager>();
 builder.Services.AddScoped<RoleDashboard.Services.ConfigurationService>();
 builder.Services.AddDbContext<RoleDashboard.Contexts.RolePipelineContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("monet"))

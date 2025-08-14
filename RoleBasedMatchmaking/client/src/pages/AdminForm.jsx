@@ -11,7 +11,7 @@ const AdminForm = () => {
         dataIndex: 'name',
         key: 'name',
         sorter: (a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
-        ellipsis: true
+        ellipsis: true              
       },
       {
         title: 'Actions',

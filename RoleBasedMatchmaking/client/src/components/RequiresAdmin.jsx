@@ -1,12 +1,12 @@
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext.jsx';
 import BASE_PATH from '../config/BasePath.js';
 
 const RequireAdmin = ({ children }) => {
   const { user } = useAuth();
 
   if (!user) {
-    return;
+    return ;
   }
 
   if (!user.admin) {

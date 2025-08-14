@@ -3,6 +3,7 @@ using RoleDashboard.Contexts;
 using RoleDashboard.Managers;
 using RoleDashboard.Models;
 using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace RoleDashboard.Controllers
 {
@@ -11,17 +12,17 @@ namespace RoleDashboard.Controllers
     [Produces("application/json")]
     public class LoginController : Controller
     {
-        RolePipelineContext _context;
         private readonly IWebHostEnvironment _env;
+        private readonly ConstantsManager _constMan;
 
-        public LoginController(RolePipelineContext context, IWebHostEnvironment env)
+        public LoginController(IWebHostEnvironment env, ConstantsManager constMan)
         {
-            _context = context;
             _env = env;
+            _constMan = constMan;
         }
 
         [HttpGet, Route("")]
-        public ActionResult<User> GetUser()
+        public async Task<ActionResult<User>> GetUser()
         {
             try
             {
@@ -49,7 +50,7 @@ namespace RoleDashboard.Controllers
                 {
                     Username = identity.Name!,
                     Name = man.GetDisplayNameByUsername(identity.Name!),
-                    Admin = groups.Contains(_context.Constants.Find("AdminGroup")?.Value ?? string.Empty)
+                    Admin = groups.Contains(await _constMan.GetConstant("Admin Group"))
                 });
             }
             catch (Exception e)

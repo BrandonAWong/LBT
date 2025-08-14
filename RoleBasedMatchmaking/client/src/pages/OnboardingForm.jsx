@@ -24,11 +24,9 @@ const OnboardingForm = () => {
   const [showResult, setShowResult] = useState(false);
   const equipments = [
     { label: "Cell Phone", value: "Cell Phone" },
+    { label: "Desk Phone", value: "Desk Phone" },
     { label: "Laptop", value: "Laptop", disabled: selectedEquipments.includes('Desktop') },
     { label: "Desktop", value: "Desktop", disabled: selectedEquipments.includes('Laptop') },
-    { label: "Radio", value: "Radio" },
-    { label: "Keys", value: "Keys" },
-    { label: "Badge", value: "Badge" },
   ];
   const { user } = useAuth();
 
@@ -89,6 +87,7 @@ const OnboardingForm = () => {
     if (detailsResponse.status === HTTP_STATUS.OK) {
       const data = await detailsResponse.json();
       form.setFieldValue('department', data.department)
+      //form.setFieldValue('details', data.)
     }
 
     const adResponse = await fetch(`${API_BASE_URL}/active-directory/titles/${encodeURIComponent(title)}/groups`);
@@ -144,7 +143,7 @@ const OnboardingForm = () => {
               <Button type="primary" onClick={() => setShowResult(false)}>Close</Button>
             ]}
             style={{marginTop: "12%"}} />
-        : <Card title="New Employee IT Form"
+        : <Card title="IT Form"
                 style={{width: '50%', margin: "auto"}}>
           {contextHolder}
 
@@ -154,6 +153,14 @@ const OnboardingForm = () => {
             <div style={{display: "flex", gap: '40px'}}>
               <Card>
                 <Form.Item name="openedBy" hidden>
+                  <Input />
+                </Form.Item>
+
+                <Form.Item name="details" hidden>
+                  <Input />
+                </Form.Item>
+
+                <Form.Item name="securityGroups" hidden>
                   <Input />
                 </Form.Item>
 
@@ -211,18 +218,19 @@ const OnboardingForm = () => {
                         style={{width: inputWidth}} />
                 </Form.Item>
                 <Form.Item name="ellipseClone"
-                          label="Ellipse Clone (Employee Name & ID)">
+                           label="Ellipse Clone (Employee Name & ID)">
                   <Input size="large"
-                        style={{width: inputWidth}} />
+                         style={{width: inputWidth}} />
                 </Form.Item>
                 <Form.Item name="equipment"
-                          label="Company Equipment List">
+                           label="Company Equipment List">
                   <Checkbox.Group options={equipments}
                                   value={selectedEquipments}
                                   onChange={setSelectedEquipments} />
                 </Form.Item>
                 <Form.Item name="offices"
-                          label="Offices">
+                           label="Offices"
+                           rules={[{ required: true, message: 'An office is required' }]}>
                   <Checkbox.Group options={["LBTCO", "LBT1", "LBT2"]} />
                 </Form.Item>
               </Card>

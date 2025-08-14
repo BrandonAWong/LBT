@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
+const AdminConstants = React.lazy(() => import('../pages/AdminSystemConfig.jsx'));
 const AdminForm = React.lazy(() => import('../pages/AdminForm.jsx'));
 const AdminTitleDetails = React.lazy(() => import('../pages/AdminTitleDetails.jsx'));
 import Dashboard from '../pages/Dashboard';
@@ -29,6 +30,10 @@ const RoutesConfig = () => {
           <RequireAdmin>
             <AdminForm />
           </RequireAdmin>} />
+        <Route path={`${BASE_PATH}/admin/system`} element={
+          <RequireAdmin>
+            <AdminConstants />
+        </RequireAdmin>} />
       </Routes>
     </Suspense>
   );

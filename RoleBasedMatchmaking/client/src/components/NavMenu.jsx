@@ -18,7 +18,8 @@ const allNavItems = [
     key: 'admin',
     children: [
       { label: 'Job Title Details', key: 'admin/title-details' },
-      { label: 'Form Distribution Groups', key: 'admin/form' }
+      { label: 'Form Distribution Groups', key: 'admin/form' },
+      { label: 'System Configuration', key: 'admin/system' },
     ]
   },
 ]

@@ -7,10 +7,12 @@ namespace RoleDashboard.Managers
     public class ServiceNowManager
     {
         private readonly ConfigurationService _configService;
+        private readonly ConstantsManager _constantsMan;
 
-        public ServiceNowManager(ConfigurationService configService)
+        public ServiceNowManager(ConfigurationService configService, ConstantsManager constantsMan)
         {
             _configService = configService;
+            _constantsMan = constantsMan;
         }
 
         internal async Task<Uri?> CreateIncident(OnboardingFormPayload payload)
@@ -35,16 +37,16 @@ namespace RoleDashboard.Managers
                         {(payload.Offices.Count > 0 ? $"Offices: {string.Join(", ", payload.Offices)}" : string.Empty)}
                         {(payload.DistributionGroups.Count > 0 ? $"Distribution Groups: {string.Join(", ", payload.DistributionGroups)}" : string.Empty)}",
                     short_description = $"New Employee IT Request: {payload.EmployeeName} - {payload.Title} ({payload.Department})",
-                    assigned_to = "Admin GenIX",
+                    assigned_to = await _constantsMan.GetConstant("Form Assigned To"),
                     opened_by = payload.OpenedBy,
                     category = "request",
-                    subcategory="New Hire"
+                    subcategory = "New Hire"
                 };
 
                 HttpResponseMessage response = await client.PostAsync(
                     $"{_configService.GetServiceNowConfig("BaseUrl")}/now/table/incident",
                     JsonContent.Create(incident));
-                
+
                 return response.Headers.Location;
             }
         }

@@ -12,5 +12,7 @@ namespace RoleDashboard.Models
         public List<string> Offices { get; set; } = new();
         public List<string> DistributionGroups { get; set; } = new();
         public string OpenedBy { get; set; } = string.Empty;
+        public string SecurityGroups { get; set; } = string.Empty;
+        public string Details { get; set; } = string.Empty;
     }
 }

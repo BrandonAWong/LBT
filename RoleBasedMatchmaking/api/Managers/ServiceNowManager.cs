@@ -35,7 +35,9 @@ namespace RoleDashboard.Managers
                         {(payload.EllipseClone != null ? $"Ellipse Clone: {payload.EllipseClone}" : string.Empty)}
                         {(payload.Equipment.Count > 0 ? $"Equipment: {string.Join(", ", payload.Equipment)}" : string.Empty)}
                         {(payload.Offices.Count > 0 ? $"Offices: {string.Join(", ", payload.Offices)}" : string.Empty)}
-                        {(payload.DistributionGroups.Count > 0 ? $"Distribution Groups: {string.Join(", ", payload.DistributionGroups)}" : string.Empty)}",
+                        {(payload.DistributionGroups.Count > 0 ? $"Selected Distribution Groups: {string.Join(", ", payload.DistributionGroups)}" : string.Empty)}
+                        {(payload.AllAdGroups.Count > 0 ? $"Template AD Groups: {string.Join(", ", payload.AllAdGroups)}" : string.Empty)}
+                        {(payload.Details != null ? $"Details: {payload.Details}" : string.Empty)}",
                     short_description = $"New Employee IT Request: {payload.EmployeeName} - {payload.Title} ({payload.Department})",
                     assigned_to = await _constantsMan.GetConstant("Form Assigned To"),
                     opened_by = payload.OpenedBy,

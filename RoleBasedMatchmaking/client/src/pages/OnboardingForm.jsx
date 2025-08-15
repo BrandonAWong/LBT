@@ -86,8 +86,8 @@ const OnboardingForm = () => {
 
     if (detailsResponse.status === HTTP_STATUS.OK) {
       const data = await detailsResponse.json();
-      form.setFieldValue('department', data.department)
-      //form.setFieldValue('details', data.)
+      form.setFieldValue('department', data.department);
+      form.setFieldValue('details', JSON.stringify(data));
     }
 
     const adResponse = await fetch(`${API_BASE_URL}/active-directory/titles/${encodeURIComponent(title)}/groups`);
@@ -101,6 +101,9 @@ const OnboardingForm = () => {
       }));
 
       const maxGroupMembers = Math.max(...transformed.map((v, _) => v.count));
+      form.setFieldValue('allAdGroups', transformed
+        .filter(t => t.count === maxGroupMembers)
+        .map(t => t.group))
       const newGroups = transformed
         .filter(t => t.count === maxGroupMembers && distributionGroups.includes(t.group))
         .map(t => t.group);
@@ -160,8 +163,10 @@ const OnboardingForm = () => {
                   <Input />
                 </Form.Item>
 
-                <Form.Item name="securityGroups" hidden>
-                  <Input />
+                <Form.Item name="allAdGroups" hidden>
+                  <Checkbox.Group>
+                    <Checkbox />
+                  </Checkbox.Group>
                 </Form.Item>
 
                 <Form.Item name="startDate"

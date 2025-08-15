@@ -25,12 +25,12 @@ if /i "%api%"=="Y" (
     dotnet publish -o publish
     set "SERVER=monet"
     set "POOL=Onboarding"
-    powershell -NoProfile -Command "Invoke-Command -ComputerName %SERVER% -ScriptBlock { Import-Module WebAdministration; Stop-WebAppPool -Name %POOL% }"
+    powershell -NoProfile -Command "Invoke-Command -ComputerName "%SERVER%" -ScriptBlock { Import-Module WebAdministration; Stop-WebAppPool -Name "%POOL%" }"
     echo Waiting for "%POOL%" to stop
     timeout /t 3 /nobreak
     xcopy /E /I /H /Y publish\* \\monet\inetpub\wwwroot\Onboarding
     xcopy /E /I /H /Y \\monet\inetpub\webconfigs\Onboarding\api.config \\monet\inetpub\wwwroot\Onboarding\web.config
-    powershell -NoProfile -Command "Invoke-Command -ComputerName %SERVER% -ScriptBlock { Import-Module WebAdministration; Start-WebAppPool -Name %POOL% }"
+    powershell -NoProfile -Command "Invoke-Command -ComputerName "%SERVER%" -ScriptBlock { Import-Module WebAdministration; Start-WebAppPool -Name "%POOL%" }"
 )
 
 echo Complete.

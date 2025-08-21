@@ -86,7 +86,7 @@ const OnboardingForm = () => {
 
     if (detailsResponse.status === HTTP_STATUS.OK) {
       const data = await detailsResponse.json();
-      form.setFieldValue('department', data.department);
+      form.setFieldValue('department', data.department); 
       form.setFieldValue('details', JSON.stringify(data));
     }
 

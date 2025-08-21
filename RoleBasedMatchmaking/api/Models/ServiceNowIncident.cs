@@ -4,6 +4,7 @@ namespace RoleDashboard.Models
     {
         public string description { get; set; } = string.Empty;
         public string short_description { get; set; } = string.Empty;
+        public string caller_id { get; set; } = string.Empty;
         public string opened_by { get; set; } = string.Empty;
         public string assigned_to { get; set; } = string.Empty;
         public string category { get; set; } = string.Empty;

@@ -1,3 +1,7 @@
+// Business logic for Postgresql database on monet.
+// The database stores the details of each of job title (what applications they receive)
+// as well as what distribution groups to show on the IT Form.
+
 using Microsoft.EntityFrameworkCore;
 using RoleDashboard.Contexts;
 using RoleDashboard.Exceptions;

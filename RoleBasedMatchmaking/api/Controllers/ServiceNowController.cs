@@ -1,8 +1,8 @@
+// Ticket creation on ServiceNow
+
 using Microsoft.AspNetCore.Mvc;
-using RoleDashboard.Contexts;
 using RoleDashboard.Managers;
 using RoleDashboard.Models;
-using RoleDashboard.Services;
 
 namespace RoleDashboard.Controllers
 {

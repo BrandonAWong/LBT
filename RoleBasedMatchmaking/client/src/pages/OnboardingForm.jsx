@@ -146,15 +146,17 @@ const OnboardingForm = () => {
               <Button type="primary" onClick={() => setShowResult(false)}>Close</Button>
             ]}
             style={{marginTop: "12%"}} />
-        : <Card title="IT Form"
-                style={{width: '50%', margin: "auto"}}>
+        :
+        <div style={{justifyContent: 'center', display: 'flex' }}>
+          <Card title="IT Form"
+                style={{ display: 'inline-block' }}>
           {contextHolder}
-
+          
           <Form form={form}
                 layout="vertical"
                 onFinish={submitForm}>
             <div style={{display: "flex", gap: '40px'}}>
-              <Card>
+              <Card style={{ flex: 2 }}> 
                 <Form.Item name="openedBy" hidden>
                   <Input />
                 </Form.Item>
@@ -240,7 +242,7 @@ const OnboardingForm = () => {
                 </Form.Item>
               </Card>
 
-              <Card style={{maxHeight: "786px", overflowY: "auto"}}>
+              <Card style={{maxHeight: "786px", overflowY: "auto", flex: 1,  minWidth: '300px', maxWidth: '300px'}}>
                 <Form.Item name="distributionGroups"
                           label="Email Distribution Lists">
                   <Checkbox.Group options={distributionGroups}
@@ -257,6 +259,7 @@ const OnboardingForm = () => {
             </div>
           </Form>
         </Card>
+        </div>
       }
     </>
   )

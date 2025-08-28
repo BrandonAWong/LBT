@@ -7,6 +7,10 @@ namespace RoleDashboard.Managers
 {
     public class ActiveDirectoryManager
     {
+        /// <summary>
+        /// Searches for all users and their titles, and aggregates total of each title
+        /// </summary>
+        /// <returns> Key: title, value: count of users with title </returns>
         internal Dictionary<string, int> GetTitles()
         {
             DirectoryEntry entry = new($"LDAP://DC=corp,DC=lbtransit,DC=com");
@@ -44,6 +48,11 @@ namespace RoleDashboard.Managers
             return titles.OrderBy(t => t.Key).ToDictionary();
         }
 
+        /// <summary>
+        /// Searches for all users on given title and aggregates all their groups.
+        /// set raw flag to true when you need to see full description of group (distribution/security, etc.).
+        /// </summary>
+        /// <returns> Key: group, value: count of users with group </returns>
         internal Dictionary<string, int> GetGroupsByTitle(string title, bool raw = false)
         {
             DirectoryEntry entry = new($"LDAP://DC=corp,DC=lbtransit,DC=com");
@@ -90,7 +99,7 @@ namespace RoleDashboard.Managers
         }
 
         internal List<string> GetGroupsByUsername(string username)
-        {   
+        {
             DirectoryEntry entry = new($"LDAP://DC=corp,DC=lbtransit,DC=com");
             DirectorySearcher searcher = new(entry)
             {
@@ -127,6 +136,9 @@ namespace RoleDashboard.Managers
             return userEntry?.Properties["displayName"].Value?.ToString();
         }
 
+        /// <summary>
+        /// Gets all titles, and finds all common groups per title
+        /// </summary>
         internal Dictionary<string, List<string>> GetCommonGroupsForAllTitles()
         {
             IEnumerable<string> titles = GetTitles().Select(t => t.Key);

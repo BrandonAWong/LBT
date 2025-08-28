@@ -1,3 +1,5 @@
+// endpoints for admin pages + getting details per title
+
 using Microsoft.AspNetCore.Mvc;
 using RoleDashboard.Contexts;
 using RoleDashboard.Exceptions;

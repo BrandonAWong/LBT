@@ -1,9 +1,12 @@
+// Uses Windows Authentication, must be enabled on IIS
+//
+// Admin is distributed if users are in the AD security group that is defined in
+// the 'constant' table. (As of 8/28/25 it is 'MIS')
+
 using Microsoft.AspNetCore.Mvc;
-using RoleDashboard.Contexts;
 using RoleDashboard.Managers;
 using RoleDashboard.Models;
 using System.Security.Principal;
-using System.Threading.Tasks;
 
 namespace RoleDashboard.Controllers
 {

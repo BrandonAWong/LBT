@@ -86,7 +86,9 @@ const Dashboard = () => {
           if (response.ok) {
             const data = await response.json();
 
-            // prob ebtter way of doing this stupid thing BUT IGTG
+            // prob better way of doing this
+            // essentially, filter out all groups to find the security vs. distribution groups
+            // then only display the common groups for the two
             const secGroups = Object.entries(data)
               .filter(([key, value]) => key.includes("OU=Domain - Security Groups"))
               .map(([key, value]) => ({
@@ -108,6 +110,8 @@ const Dashboard = () => {
 
             setGroups(transformed);
 
+            // we get the max here to find common groups, because some users just don't
+            // have groups, so we have to account for that edge case
             const maxGroupMembers = Math.max(...transformed.map((v, _) => v.count));
             setCommonSecGroups(secGroups.filter(t => t.count == maxGroupMembers));
             setCommonDistGroups(distGroups.filter(t => t.count == maxGroupMembers));

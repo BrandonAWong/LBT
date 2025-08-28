@@ -1,11 +1,8 @@
 /*
  This page is buggy 
- - Save a new, then edit the new -> creates new record. should get back new id from
-   backend and set new id
- - table does not update with changes except for delete -> lazy ^ not fixing above
-   either unless someone tells me.
- - create a new title, same exact without casing as another -> it will always pick another one ->
-   should pick by id instead of title. again. lazy 
+ - table does not update with changes except for delete
+ - create a new title, same exact except same casing as another -> it will always pick another one ->
+   should pick by id instead of title.
 */
 
 import { useState, useEffect } from 'react';

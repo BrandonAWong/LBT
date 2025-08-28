@@ -1,3 +1,5 @@
+// Admin page component, used for editing details
+
 import { useState, useEffect } from 'react';
 import { Card, Skeleton, message, Form, Input, Checkbox, Button } from 'antd';
 import API_BASE_URL from '../config/api.js';

@@ -1,3 +1,5 @@
+// Used to display the details of a title (what apps a title should have)
+
 import { Card, Descriptions, Skeleton } from "antd";
 
 const CardDetails = ({ items, title="Details" }) => {

@@ -15,6 +15,10 @@ namespace RoleDashboard.Managers
             _constantsMan = constantsMan;
         }
 
+        /// <summary>
+        /// POST to ServiceNow Table API to create an incident
+        /// </summary>
+        /// <returns> Location URI of incident </returns>
         internal async Task<Uri?> CreateIncident(OnboardingFormPayload payload)
         {
             using (HttpClient client = new())
@@ -27,6 +31,7 @@ namespace RoleDashboard.Managers
 
                 ServiceNowIncident incident = new()
                 {
+                    // TODO : fix formatting of this desription.
                     description = @$"Employee Name: {payload.EmployeeName}
                         Start Date: {payload.StartDate.ToString("M/d/yyyy")}
                         {(payload.EmployeeId != null ? $"Employee ID: {payload.EmployeeId}" : string.Empty)}

@@ -1,0 +1,15 @@
+Build + Run:
+  API:
+    Download .NET SDK 9
+    in api directory, run - dotnet watch
+
+  Client: 
+    Download Node.js
+    in client directory, install packages, run - npm i
+    to run - npm run dev
+
+Deploy:
+run - deploy.bat
+
+Restore:
+run - restore_backup.bat

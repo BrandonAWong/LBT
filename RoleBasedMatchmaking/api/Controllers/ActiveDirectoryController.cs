@@ -1,3 +1,5 @@
+// Getting job titles, and the groups related to those titles
+
 using Microsoft.AspNetCore.Mvc;
 using RoleDashboard.Managers;
 using RoleDashboard.Models;

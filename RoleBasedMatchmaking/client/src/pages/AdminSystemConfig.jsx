@@ -1,3 +1,5 @@
+// for editing constants
+
 import SearchTable from '../components/SearchTable.jsx'
 import { useState, useEffect } from 'react';
 import { Button, Space, Popconfirm, message, Form, Input } from 'antd';

@@ -1,3 +1,5 @@
+// base ant d table with search capabilities
+
 import { useState, useEffect } from 'react';
 import { Table, Card, Input } from 'antd'
 const { Search } = Input;

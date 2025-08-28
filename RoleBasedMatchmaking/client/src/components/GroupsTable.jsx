@@ -1,3 +1,5 @@
+// Used on dashboard, displays all groups of a title, can be filtered/searched
+
 import SearchTable from './SearchTable.jsx';
 
 const GroupsTable = ({ data }) => {

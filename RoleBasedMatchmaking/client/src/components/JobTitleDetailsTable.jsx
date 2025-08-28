@@ -1,3 +1,5 @@
+// used on admin page to search for title details to modify
+
 import SearchTable from "../components/SearchTable";
 import { Button, Space, Popconfirm } from "antd";
 import { PlusCircleOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';

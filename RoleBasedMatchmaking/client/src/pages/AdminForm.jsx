@@ -1,3 +1,9 @@
+// page for modifying the distribution groups displayed on the OnboardingForm
+//
+// TODO: page not finished -
+// 1. Edit (needs API endpoint)
+// 2. Create (needs API Endpoint)
+
 import SearchTable from '../components/SearchTable.jsx'
 import { useState, useEffect } from 'react';
 import { Button, Popconfirm, Space, message } from 'antd';
@@ -59,7 +65,7 @@ const AdminForm = () => {
       catch (error) {
           messageApi.open({ type: 'error', content: error.message });
       }
-    }
+    } 
 
     getDistributionGroups();
   }, []);

@@ -1,3 +1,5 @@
+//  Retrieve system constants                           
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RoleDashboard.Contexts;
@@ -13,7 +15,7 @@ namespace RoleDashboard.Controllers
     {
         RolePipelineContext _context;
         ConstantsManager _manager;
-
+                
         public ConstantsController(RolePipelineContext context)
         {
             _context = context;
@@ -43,7 +45,7 @@ namespace RoleDashboard.Controllers
             try
             {
                 return Ok(await _manager.GetConstant(key));
-            }
+            } 
             catch (Exception e)
             {
                 return StatusCode(500, new
